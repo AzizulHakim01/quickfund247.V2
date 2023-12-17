@@ -1,14 +1,39 @@
 import { faBars, faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState(false);
+
+  // Add a state to track the scroll position
+  const [isSticky, setIsSticky] = useState(false);
+
+  // Add an event listener to handle scrolling
+  const handleScroll = () => {
+    const scrollPosition = window.scrollY;
+    if (scrollPosition > 0) {
+      setIsSticky(true);
+    } else {
+      setIsSticky(false);
+    }
+  };
+
+  // Attach the scroll event listener when the component mounts
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  
   return (
-    <header className="w-full bg-white md:p-0 p-4">
-      <div className="md:w-[1152px] w-full md:mx-auto md:h-[200px] flex items-center justify-between">
+    <header className={`w-full bg-white md:p-0 p-4 ${
+      isSticky ? "fixed top-0 z-50 shadow-md" : "md:p-0 p-4"
+    }`}>
+      <div className="max-w-screen-xl w-full md:mx-auto md:h-[200px] flex items-center justify-between">
         {/* Header Logo div */}
         <div className="">
           <Link to={"/"}>
@@ -43,7 +68,7 @@ const Header = () => {
                 <p className="cursor-pointer hover:text-[#00D1A9]">
                   Business Funding
                 </p>
-                <div className="hidden absolute z-10 top-full left-0 w-96 p-4 mb-4 group-hover:block">
+                <div className="hidden bg-white absolute z-10 top-full left-0 w-96 p-4 mb-4 group-hover:block">
                   <Link
                     to={"/long-term"}
                     className={`hover:text-[#00D1A9] ${
@@ -111,7 +136,7 @@ const Header = () => {
                   </Link>
                 </div>
               </li>
-              <li className="relative group">
+              <li className="relative group bg-white">
                 <p className="cursor-pointer">Resources</p>
                 <div className="hidden absolute z-10 top-full left-0 w-96 p-4 space-y-2 group-hover:block">
                   <Link
