@@ -9,3 +9,14 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
+
+/* Add the following styles to your CSS file or style section */
+.custom-transition {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.custom-transition.group-hover {
+  max-height: 500px; /* Adjust the maximum height as needed */
+  transition: max-height 0.3s ease-in-out; /* Adjust the duration and timing function as needed */
+}

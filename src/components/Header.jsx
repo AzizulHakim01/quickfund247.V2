@@ -65,10 +65,10 @@ const Header = () => {
                 </Link>
               </li>
               <li className="relative group">
-                <p className="cursor-pointer hover:text-[#00D1A9]">
+                <p className="cursor-pointer hover:text-[#00D1A9] transition-all duration-300 ease-in-out">
                   Business Funding
                 </p>
-                <div className="hidden bg-white absolute z-10 top-full left-0 w-96 p-4 mb-4 group-hover:block">
+                <div className="hidden bg-white absolute z-10 top-full left-0 w-96 p-4 mb-4 group-hover:block custom-transition">
                   <Link
                     to={"/long-term"}
                     className={`hover:text-[#00D1A9] ${
@@ -137,7 +137,7 @@ const Header = () => {
                 </div>
               </li>
               <li className="relative group bg-white">
-                <p className="cursor-pointer">Resources</p>
+                <p className="cursor-pointer hover:text-[#00d1a9]">Resources</p>
                 <div className="hidden absolute z-10 top-full left-0 w-96 p-4 space-y-2 group-hover:block">
                   <Link
                     to={"/faq"}
