@@ -1,9 +1,8 @@
-import React from "react";
 import Layout from "../components/Layout";
 import Process from "../components/Process";
 import YouAreCoverd from "../components/YouAreCoverd";
 
-const LongTerm = () => {
+const Loc = () => {
   return (
     <Layout>
       <div className="">
@@ -11,7 +10,7 @@ const LongTerm = () => {
           <div className="grid md:grid-cols-2 grid-cols-1 gap-16 items-center py-2 md:mb-16">
             <div className="flex flex-col gap-8">
               <h2 className="text-slate-700 text-xl font-semibold">
-                Long Term Loans
+                Line Of Credit
               </h2>
               <h1 className="text-5xl font-bold text-[#00d1a9]">
                 Low rates and flexible repayment <b>.</b>
@@ -29,7 +28,7 @@ const LongTerm = () => {
             <h1 className="text-4xl font-bold text-[#00d1a9] md:w-[600px] text-center">
               A business term loan can help your business .
             </h1>
-            <div className="grid md:md:grid-cols-2 grid-cols-1 grid-cols-1 gap-24 mt-16">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-24 mt-16">
               <div className="">
                 <div className="flex gap-4 items-center">
                   <img src="/images/loc.png" alt="" className="w-16" />
@@ -84,7 +83,7 @@ const LongTerm = () => {
           <div className="grid md:grid-cols-2 grid-cols-1 gap-16 items-center py-2 mb-4 mt-16 ">
             <div className="flex flex-col gap-8 order-last">
               <h2 className="text-slate-700 text-xl font-semibold">
-                Long Term Loans
+                Line Of Credit
               </h2>
               <h1 className="text-5xl font-bold text-[#00d1a9]">
                 Low rates and flexible repayment <b>.</b>
@@ -106,4 +105,4 @@ const LongTerm = () => {
   );
 };
 
-export default LongTerm;
+export default Loc;

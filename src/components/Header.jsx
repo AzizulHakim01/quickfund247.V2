@@ -20,14 +20,14 @@ const Header = () => {
     }
   };
 
-  // Attach the scroll event listener when the component mounts
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  // // Attach the scroll event listener when the component mounts
+  // useEffect(() => {
+  //   window.addEventListener("scroll", handleScroll);
+  //   // Clean up the event listener when the component unmounts
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
   
   return (
     <header className={`w-full bg-white md:p-0 p-4 ${
