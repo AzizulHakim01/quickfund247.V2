@@ -46,7 +46,7 @@ const Contact = () => {
     history: history,
     date: today,
   };
-
+  const [file, setFile] = useState([]);
   // Handle sheet upload
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +55,23 @@ const Contact = () => {
         "https://sheet.best/api/sheets/8ec7d0cf-206a-4a07-9ac6-b2dffa596d5d",
         data
       );
-      console.log(res.data);
+      setAddress("")
+      setAmount("")
+      setBMonth("")
+      setCMonth("")
+      setName("")
+      setDba("")
+      setEmail("")
+      setDate("")
+      setCity("")
+      setState("")
+      setRevenue("")
+      setFico("")
+      setLMonth("")
+      setHistory("")
+      setNumber("")
+      setIndustry("")
+      setFile([])
       message.success("Data updated Successfully");
     } catch (error) {
       console.error(error);
@@ -71,7 +87,7 @@ const Contact = () => {
 
   // Upload handle
 
-  const [file, setFile] = useState([]);
+  
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
