@@ -1,50 +1,47 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { message } from "antd";
+import axios from "axios";
 
 const Contact = () => {
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [name, setName] = useState("");
-  const [dba, setDba] = useState("");
-  const [email, setEmail] = useState("");
-  const [number, setNumber] = useState("");
-  const [amount, setAmount] = useState("");
-  const [date, setDate] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [industry, setIndustry] = useState("");
-  const [revenue, setRevenue] = useState("");
-  const [fico, setFico] = useState("");
-  const [cMonth, setCMonth] = useState("");
-  const [lMonth, setLMonth] = useState("");
-  const [bMonth, setBMonth] = useState("");
-  const [history, setHistory] = useState("");
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    dba: "",
+    email: "",
+    number: "",
+    amount: "",
+    date: "",
+    address: "",
+    city: "",
+    state: "",
+    industry: "",
+    revenue: "",
+    fico: "",
+    cMonth: "",
+    lMonth: "",
+    bMonth: "",
+    history: "",
+  });
+  const {
+    name,
+    dba,
+    email,
+    number,
+    amount,
+    date,
+    address,
+    city,
+    state,
+    industry,
+    revenue,
+    fico,
+    cMonth,
+    lMonth,
+    bMonth,
+    history,
+  } = formData;
 
-  const data = {
-    name: name,
-    dba: dba,
-    email: email,
-    number: number,
-    amount: amount,
-    date: date,
-    address: address,
-    city: city,
-    state: state,
-    industry: industry,
-    revenue: revenue,
-    fico: fico,
-    c_month: cMonth,
-    l_month: lMonth,
-    b_month: bMonth,
-    history: history,
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(data);
-    handleOpenPicker();
-  };
 
   const [showTextArea, setShowTextArea] = useState(false);
 
@@ -52,71 +49,59 @@ const Contact = () => {
     setShowTextArea(event.target.value === "yes");
   };
 
-  // const handleFileChange = (e) => {
-  //   const files = e.target.files;
-  //   setSelectedFiles([...files]);
-  // };
+  const todayDate = new Date().toLocaleDateString("en-US");
 
-  const todayDate = new Date().getDate();
-  const todayMonth = new Date().getMonth();
-  const todayYear = new Date().getFullYear();
-
-  const today = `${todayDate}/${todayMonth}/${todayYear}`;
-
-  // Upload handle
-
-  const [file, setFile] = useState([]);
+  const [files, setFiles] = useState([]);
 
   const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile([...file, selectedFile]);
-
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      const result = reader.result;
-      const base64Data = result.split("base64,")[1];
-
-      const formData = {
-        base64: base64Data,
-        type: selectedFile.type,
-        name: selectedFile.name,
-        businessName: name,
-        dba: dba,
-        email: email,
-        number: number,
-        amount: amount,
-        date: date,
-        address: address,
-        city: city,
-        state: state,
-        industry: industry,
-        revenue: revenue,
-        fico: fico,
-        c_month: cMonth,
-        l_month: lMonth,
-        b_month: bMonth,
-        history: history,
-      };
-
-      // Assuming you have an API endpoint for the upload
-      fetch("Api_Endpoint_Url", {
-        method: "POST",
-        body: JSON.stringify(formData),
-      })
-        .then((response) => response.text())
-        .then((data) => console.log(data));
-    };
-
-    reader.readAsDataURL(selectedFile);
+    const selectedFiles = event.target.files;
+    setFiles([...files, ...selectedFiles]);
   };
 
-  //https://www.youtube.com/watch?v=17GhfZsCfac&ab_channel=CodeWithSundeep
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const selectedFile = files[0];
+
+      const base64Data = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split("base64,")[1]);
+        reader.readAsDataURL(selectedFile);
+      });
+
+      const axiosConfig = {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      };
+
+      const response = await axios.post(
+        "https://script.google.com/macros/s/AKfycbyDIp7uQ98tetpZv9efGhApuhRxYJ5U_R4cpXhy8gDh-rIHpVFBnV4d6eTJFNn8u3oV/exec",
+        {
+          base64: base64Data,
+          type: selectedFile.type,
+          name: selectedFile.name,
+          createDate: todayDate,
+          data: formData,
+        },
+        axiosConfig
+      );
+
+      console.log(response.data);
+      message.success("Data updated Successfully");
+    } catch (error) {
+      console.error("Error:", error);
+      console.error("There is an error", error);
+    }
+  };
 
   return (
     <Layout>
       <div className="">
-        <form className="max-w-screen-xl mx-auto flex flex-col gap-16">
+        <form
+          className="max-w-screen-xl mx-auto flex flex-col gap-16"
+          onSubmit={handleSubmit}
+        >
           <div className="">
             <h1 className="text-4xl font-bold text-[#00d1a9] text-center">
               MERCHANT FUNDING REQUEST FORM
@@ -147,7 +132,7 @@ const Contact = () => {
                   required
                   name={"legalBusinessName"}
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -165,7 +150,7 @@ const Contact = () => {
                   required
                   name={"dba"}
                   value={dba}
-                  onChange={(e) => setDba(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, dba: e.target.value })}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -182,7 +167,7 @@ const Contact = () => {
                   required
                   name={"email"}
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -199,7 +184,7 @@ const Contact = () => {
                   required
                   name={"number"}
                   value={number}
-                  onChange={(e) => setNumber(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, number: e.target.value })}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -219,7 +204,7 @@ const Contact = () => {
                   name="amount"
                   value={amount}
                   onChange={(e) =>
-                    setAmount(parseFloat(e.target.value).toFixed(2))
+                    setFormData({ ...formData, amount: e.target.value })
                   }
                 />
               </div>
@@ -238,7 +223,7 @@ const Contact = () => {
                   placeholder="MM/DD/YYYY"
                   name="startDate"
                   value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                 />
               </div>
               <div className="col-span-3">
@@ -255,7 +240,7 @@ const Contact = () => {
                   required
                   name={"address"}
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -272,7 +257,7 @@ const Contact = () => {
                   required
                   name={"city"}
                   value={city}
-                  onChange={(e) => setCity(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                 />
               </div>
               <div>
@@ -289,7 +274,7 @@ const Contact = () => {
                   required
                   name="state"
                   value={state}
-                  onChange={(e) => setState(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, state: e.target.value })}
                 />
               </div>
 
@@ -308,7 +293,7 @@ const Contact = () => {
                   placeholder="Eg. Retail, Manufacturing etc."
                   name={"industry"}
                   value={industry}
-                  onChange={(e) => setIndustry(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
                 />
               </div>
             </div>
@@ -337,7 +322,7 @@ const Contact = () => {
                   placeholder="$0 - $15M"
                   name={"revenue"}
                   value={revenue}
-                  onChange={(e) => setRevenue(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, revenue: e.target.value })}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -354,7 +339,7 @@ const Contact = () => {
                   required
                   name={"fico"}
                   value={fico}
-                  onChange={(e) => setFico(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, fico: e.target.value })}
                 />
               </div>
               <div className=""></div>
@@ -373,7 +358,7 @@ const Contact = () => {
                   required
                   name={"cMonth"}
                   value={cMonth}
-                  onChange={(e) => setCMonth(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, cMonth: e.target.value })}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -390,7 +375,7 @@ const Contact = () => {
                   required
                   name={"lMonth"}
                   value={lMonth}
-                  onChange={(e) => setLMonth(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, lMonth: e.target.value })}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -407,7 +392,7 @@ const Contact = () => {
                   required
                   name={"bMonth"}
                   value={bMonth}
-                  onChange={(e) => setBMonth(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, bMonth: e.target.value })}
                 />
               </div>
 
@@ -464,7 +449,7 @@ const Contact = () => {
                       placeholder="Write your MCA history like how many positions/ daily, weekly or monthly.."
                       name={"history"}
                       value={history}
-                      onChange={(e) => setHistory(e.target.value)}
+                      onChange={(e) => setFormData({ ...formData, history: e.target.value })}
                     />
                   </div>
                 )}
@@ -510,10 +495,13 @@ const Contact = () => {
               </div>
               <p>
                 You Selected These Files:{" "}
+                <span className="text-red-700 font-bold">
+                  N:B: Please Upload Statements 1 by 1.
+                </span>
                 <span>
                   {
                     <ul className="list-disc text-sm text-gray-900 dark:text-gray-300">
-                      {file.map((file, index) => (
+                      {files.map((file, index) => (
                         <li key={index}>{file.name}</li>
                       ))}
                     </ul>
