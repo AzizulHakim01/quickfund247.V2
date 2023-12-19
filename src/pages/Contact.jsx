@@ -1,48 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { message } from "antd";
 
 const Contact = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [name, setName] = useState("")
-  const [dba, setDba] = useState("")
-  const [email, setEmail] = useState("")
-  const [number, setNumber] = useState("")
-  const [amount, setAmount] = useState("")
-  const [date, setDate] = useState("")
-  const [address, setAddress] = useState("")
-  const [city, setCity] = useState("")
-  const [state, setState] = useState("")
-  const [industry, setIndustry] = useState("")
-  const [revenue, setRevenue] = useState("")
-  const [fico, setFico] = useState("")
-  const [cMonth, setCMonth] = useState("")
-  const [lMonth, setLMonth] = useState("")
-  const [bMonth, setBMonth] = useState("")
-  const [history, setHistory] = useState("")
-const data = {
-  name:name,
-  dba:dba,
-  email:email,
-  number:number,
-  amount:amount,
-  date:date,
-  address:address,
-  city:city,
-  state:state,
-  industry:industry,
-  revenue:revenue,
-  fico:fico,
-  c_month:cMonth,
-  l_month:lMonth,
-  b_month:bMonth,
-  history:history
-}
+  const [name, setName] = useState("");
+  const [dba, setDba] = useState("");
+  const [email, setEmail] = useState("");
+  const [number, setNumber] = useState("");
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [revenue, setRevenue] = useState("");
+  const [fico, setFico] = useState("");
+  const [cMonth, setCMonth] = useState("");
+  const [lMonth, setLMonth] = useState("");
+  const [bMonth, setBMonth] = useState("");
+  const [history, setHistory] = useState("");
 
-const handleSubmit = (e) =>{
-  e.preventDefault()
-  console.log(data)
-}
+  const data = {
+    name: name,
+    dba: dba,
+    email: email,
+    number: number,
+    amount: amount,
+    date: date,
+    address: address,
+    city: city,
+    state: state,
+    industry: industry,
+    revenue: revenue,
+    fico: fico,
+    c_month: cMonth,
+    l_month: lMonth,
+    b_month: bMonth,
+    history: history,
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(data);
+    handleOpenPicker();
+  };
 
   const [showTextArea, setShowTextArea] = useState(false);
 
@@ -50,16 +52,66 @@ const handleSubmit = (e) =>{
     setShowTextArea(event.target.value === "yes");
   };
 
-  const handleFileChange = (e) => {
-    const files = e.target.files;
-    setSelectedFiles([...files]);
-  };
+  // const handleFileChange = (e) => {
+  //   const files = e.target.files;
+  //   setSelectedFiles([...files]);
+  // };
 
   const todayDate = new Date().getDate();
   const todayMonth = new Date().getMonth();
   const todayYear = new Date().getFullYear();
 
-  const today = `${todayDate}/${todayMonth}/${todayYear}`
+  const today = `${todayDate}/${todayMonth}/${todayYear}`;
+
+  // Upload handle
+
+  const [file, setFile] = useState([]);
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile([...file, selectedFile]);
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      const result = reader.result;
+      const base64Data = result.split("base64,")[1];
+
+      const formData = {
+        base64: base64Data,
+        type: selectedFile.type,
+        name: selectedFile.name,
+        businessName: name,
+        dba: dba,
+        email: email,
+        number: number,
+        amount: amount,
+        date: date,
+        address: address,
+        city: city,
+        state: state,
+        industry: industry,
+        revenue: revenue,
+        fico: fico,
+        c_month: cMonth,
+        l_month: lMonth,
+        b_month: bMonth,
+        history: history,
+      };
+
+      // Assuming you have an API endpoint for the upload
+      fetch("Api_Endpoint_Url", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.text())
+        .then((data) => console.log(data));
+    };
+
+    reader.readAsDataURL(selectedFile);
+  };
+
+  //https://www.youtube.com/watch?v=17GhfZsCfac&ab_channel=CodeWithSundeep
 
   return (
     <Layout>
@@ -95,7 +147,7 @@ const handleSubmit = (e) =>{
                   required
                   name={"legalBusinessName"}
                   value={name}
-                  onChange={(e)=>setName(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -113,7 +165,7 @@ const handleSubmit = (e) =>{
                   required
                   name={"dba"}
                   value={dba}
-                  onChange={(e)=>setDba(e.target.value)}
+                  onChange={(e) => setDba(e.target.value)}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -130,7 +182,7 @@ const handleSubmit = (e) =>{
                   required
                   name={"email"}
                   value={email}
-                  onChange={(e)=>setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -147,7 +199,7 @@ const handleSubmit = (e) =>{
                   required
                   name={"number"}
                   value={number}
-                  onChange={(e)=>setNumber(e.target.value)}
+                  onChange={(e) => setNumber(e.target.value)}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -166,7 +218,9 @@ const handleSubmit = (e) =>{
                   placeholder="$0.00 - $5,000,000"
                   name="amount"
                   value={amount}
-                  onChange={(e) => setAmount(parseFloat(e.target.value).toFixed(2))}
+                  onChange={(e) =>
+                    setAmount(parseFloat(e.target.value).toFixed(2))
+                  }
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -184,7 +238,7 @@ const handleSubmit = (e) =>{
                   placeholder="MM/DD/YYYY"
                   name="startDate"
                   value={date}
-                  onChange={(e)=>setDate(e.target.value)}
+                  onChange={(e) => setDate(e.target.value)}
                 />
               </div>
               <div className="col-span-3">
@@ -201,7 +255,7 @@ const handleSubmit = (e) =>{
                   required
                   name={"address"}
                   value={address}
-                  onChange={(e)=>setAddress(e.target.value)}
+                  onChange={(e) => setAddress(e.target.value)}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -235,7 +289,7 @@ const handleSubmit = (e) =>{
                   required
                   name="state"
                   value={state}
-                  onChange={(e)=>setState(e.target.value)}
+                  onChange={(e) => setState(e.target.value)}
                 />
               </div>
 
@@ -254,7 +308,7 @@ const handleSubmit = (e) =>{
                   placeholder="Eg. Retail, Manufacturing etc."
                   name={"industry"}
                   value={industry}
-                  onChange={(e)=>setIndustry(e.target.value)}
+                  onChange={(e) => setIndustry(e.target.value)}
                 />
               </div>
             </div>
@@ -283,7 +337,7 @@ const handleSubmit = (e) =>{
                   placeholder="$0 - $15M"
                   name={"revenue"}
                   value={revenue}
-                  onChange={(e)=>setRevenue(e.target.value)}
+                  onChange={(e) => setRevenue(e.target.value)}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -300,7 +354,7 @@ const handleSubmit = (e) =>{
                   required
                   name={"fico"}
                   value={fico}
-                  onChange={(e)=>setFico(e.target.value)}
+                  onChange={(e) => setFico(e.target.value)}
                 />
               </div>
               <div className=""></div>
@@ -319,7 +373,7 @@ const handleSubmit = (e) =>{
                   required
                   name={"cMonth"}
                   value={cMonth}
-                  onChange={(e)=>setCMonth(e.target.value)}
+                  onChange={(e) => setCMonth(e.target.value)}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -336,7 +390,7 @@ const handleSubmit = (e) =>{
                   required
                   name={"lMonth"}
                   value={lMonth}
-                  onChange={(e)=>setLMonth(e.target.value)}
+                  onChange={(e) => setLMonth(e.target.value)}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -353,7 +407,7 @@ const handleSubmit = (e) =>{
                   required
                   name={"bMonth"}
                   value={bMonth}
-                  onChange={(e)=>setBMonth(e.target.value)}
+                  onChange={(e) => setBMonth(e.target.value)}
                 />
               </div>
 
@@ -396,24 +450,24 @@ const handleSubmit = (e) =>{
                   </div>
                 </div>
                 {showTextArea && (
-                    <div className="col-span-3">
-                      <label
-                        htmlFor="message"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Your MCA history
-                      </label>
-                      <textarea
-                        id="message"
-                        rows={4}
-                        className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Write your MCA history like how many positions/ daily, weekly or monthly.."
-                        name={"history"}
-                  value={history}
-                  onChange={(e)=>setHistory(e.target.value)}
-                      />
-                    </div>
-                  )}
+                  <div className="col-span-3">
+                    <label
+                      htmlFor="message"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Your MCA history
+                    </label>
+                    <textarea
+                      id="message"
+                      rows={4}
+                      className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Write your MCA history like how many positions/ daily, weekly or monthly.."
+                      name={"history"}
+                      value={history}
+                      onChange={(e) => setHistory(e.target.value)}
+                    />
+                  </div>
+                )}
               </div>
               <div className="flex items-center justify-center col-span-3">
                 <label
@@ -457,13 +511,13 @@ const handleSubmit = (e) =>{
               <p>
                 You Selected These Files:{" "}
                 <span>
-                  {selectedFiles.length > 0 && (
+                  {
                     <ul className="list-disc text-sm text-gray-900 dark:text-gray-300">
-                      {selectedFiles.map((file, index) => (
+                      {file.map((file, index) => (
                         <li key={index}>{file.name}</li>
                       ))}
                     </ul>
-                  )}
+                  }
                 </span>
               </p>
             </div>
