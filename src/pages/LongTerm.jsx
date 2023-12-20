@@ -11,7 +11,7 @@ const LongTerm = () => {
           <div className="grid md:grid-cols-2 grid-cols-1 gap-16 items-center py-2 md:mb-16">
             <div className="flex flex-col gap-8">
               <h2 className="text-slate-700 text-xl font-semibold">
-                Long Term Loans
+                Business Term Loans
               </h2>
               <h1 className="text-5xl font-bold text-[#00d1a9]">
                 Low rates and flexible repayment <b>.</b>

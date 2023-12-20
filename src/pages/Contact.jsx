@@ -20,6 +20,7 @@ const Contact = () => {
   const [lMonth, setLMonth] = useState("");
   const [bMonth, setBMonth] = useState("");
   const [history, setHistory] = useState("");
+  const [pCapital, setPCapital] = useState("")
 
   const todayDate = new Date().getDate();
   const todayMonth = new Date().getMonth();
@@ -45,6 +46,7 @@ const Contact = () => {
     before_last_month: bMonth,
     history: history,
     date: today,
+    purpose_capital: pCapital
   };
   const [file, setFile] = useState([]);
   // Handle sheet upload
@@ -72,6 +74,7 @@ const Contact = () => {
       setNumber("")
       setIndustry("")
       setFile([])
+      setPCapital("")
       message.success("Data updated Successfully");
     } catch (error) {
       console.error(error);
@@ -120,7 +123,6 @@ const Contact = () => {
     reader.readAsDataURL(selectedFile);
   };
 
-  //https://www.youtube.com/watch?v=17GhfZsCfac&ab_channel=CodeWithSundeep
 
   return (
     <Layout>
@@ -375,7 +377,7 @@ const Contact = () => {
                   htmlFor="small-input"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Current Month
+                  Current Month Revenue
                   <span className="text-red-700">*</span>
                 </label>
                 <input
@@ -393,7 +395,7 @@ const Contact = () => {
                   htmlFor="small-input"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Last Month <span className="text-red-700">*</span>
+                  Last Month Revenue<span className="text-red-700">*</span>
                 </label>
                 <input
                   type="text"
@@ -410,7 +412,7 @@ const Contact = () => {
                   htmlFor="small-input"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Month before Last <span className="text-red-700">*</span>
+                  Month before Last Revenue <span className="text-red-700">*</span>
                 </label>
                 <input
                   type="text"
@@ -425,7 +427,7 @@ const Contact = () => {
 
               <div className="flex flex-col gap-4">
                 <label htmlFor="">
-                  Current Cash Advances <span className="text-red-700">*</span>
+                  Current Cash Advances? <span className="text-red-700">*</span>
                 </label>
                 <div className="flex gap-6">
                   <div className="flex items-center border border-gray-200 rounded dark:border-gray-700 px-4">
@@ -481,6 +483,23 @@ const Contact = () => {
                   </div>
                 )}
               </div>
+              <div className="col-span-3 md:col-span-1">
+                <label
+                  htmlFor="small-input"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Purpose of the Capital <span className="text-red-700">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="small-input"
+                  className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required
+                  name={"purpose_capital"}
+                  value={pCapital}
+                  onChange={(e) => setPCapital(e.target.value)}
+                />
+              </div>
               <div className="flex items-center justify-center col-span-3">
                 <label
                   htmlFor="dropzone-file"
@@ -517,6 +536,7 @@ const Contact = () => {
                     accept=".pdf"
                     multiple
                     onChange={handleFileChange}
+                    required
                   />
                 </label>
               </div>

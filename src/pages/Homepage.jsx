@@ -5,11 +5,13 @@ import WeOffer from '../components/WeOffer'
 import About from '../components/About'
 import Process from '../components/Process'
 import YouAreCoverd from '../components/YouAreCoverd'
+import HeroTest from '../components/HeroTest'
 
 const Homepage = () => {
   return (
     <Layout>
-        <Hero/>
+        {/* <Hero/> */}
+        <HeroTest/>
         <WeOffer/>
         <About/>
         <Process/>

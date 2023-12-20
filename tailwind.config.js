@@ -9,7 +9,13 @@ export default {
     extend: {
       colors: {
         primary: {"50":"#eff6ff","100":"#dbeafe","200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a","950":"#172554"}
-      }
+      },
+      backgroundImage: {
+        'hero-pattern': "url('/images/hero_test.jpg')"
+      },
+      textStroke: {
+        '2': '2px',   // Customize the width of the stroke as needed
+      },
     },
     fontFamily: {
       'body': [

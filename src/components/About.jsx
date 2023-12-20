@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 const About = () => {
   return (
@@ -7,7 +8,12 @@ const About = () => {
         id="features"
         className="relative block px-6 py-10 md:py-20 md:px-10"
       >
-        <div className="relative mx-auto max-w-5xl text-center">
+        <motion.div
+          initial={{ opacity: 0, y: -500 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 3 }}
+          className="relative mx-auto max-w-5xl text-center"
+        >
           <span className="text-gray-400 my-3 flex items-center justify-center font-medium uppercase tracking-wider">
             Why choose us
           </span>
@@ -18,14 +24,19 @@ const About = () => {
             "Discover the Difference: Tailored Solutions, Transparent Processes,
             and Unmatched Support for Your Financial Journey."
           </p>
-        </div>
+        </motion.div>
         <div className="relative mx-auto max-w-7xl z-10 grid grid-cols-1 gap-10 pt-14 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-md border border-neutral-800  p-8 text-center shadow">
+          <motion.div
+            initial={{ opacity: 0, x: -500 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 4 }}
+            className="rounded-md border border-neutral-800  p-8 text-center shadow"
+          >
             <div
               className="button-text mx-auto flex h-12 w-12 items-center justify-center rounded-md border "
               style={{
                 borderColor: "#e6e6e6",
-                backgroundColor:"#00d1a9"
+                backgroundColor: "#00d1a9",
               }}
             >
               <svg
@@ -55,13 +66,16 @@ const About = () => {
               track record for your financial needs. Excellence is our
               expertise.
             </p>
-          </div>
-          <div className="rounded-md border border-neutral-800  p-8 text-center shadow">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 500 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 4 }}
+            className="rounded-md border border-neutral-800  p-8 text-center shadow"
+          >
             <div
               className="button-text mx-auto flex h-12 w-12 items-center justify-center rounded-md border "
-              style={{borderColor: "#e6e6e6",
-              backgroundColor:"#00d1a9"
-              }}
+              style={{ borderColor: "#e6e6e6", backgroundColor: "#00d1a9" }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -86,13 +100,18 @@ const About = () => {
               Committed to lasting relationships. Your trust matters. Choose a
               partner invested in your long-term financial success.
             </p>
-          </div>
-          <div className="rounded-md border border-neutral-800 p-8 text-center shadow">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 500 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 4 }}
+            className="rounded-md border border-neutral-800 p-8 text-center shadow"
+          >
             <div
               className="button-text mx-auto flex h-12 w-12 items-center justify-center rounded-md border "
               style={{
                 borderColor: "#e6e6e6",
-                backgroundColor:"#00d1a9"
+                backgroundColor: "#00d1a9",
               }}
             >
               <svg
@@ -124,7 +143,7 @@ const About = () => {
               the perfect fusion of technology and personalized service. Your
               financial goals, simplified and supported.
             </p>
-          </div>
+          </motion.div>
         </div>
         <div
           className="absolute bottom-0 left-0 z-0 h-1/3 w-full border-b"

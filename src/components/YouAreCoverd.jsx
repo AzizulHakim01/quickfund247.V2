@@ -20,7 +20,7 @@ const YouAreCoverd = () => {
               />
             </div>
             <p className="text-justify text-xl font-semibold text-zinc-500">
-              “The attention to our needs that we get from Funding770 is second
+              “The attention to our needs that we get from QuickFunds247 is second
               to none”
             </p>
             <p className="text-zinc-700 ">

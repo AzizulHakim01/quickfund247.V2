@@ -12,3 +12,9 @@
 textArea{
   resize: none;
 }
+
+/* Add this style to your stylesheet */
+.floating-text {
+  transition: transform 0.3s ease-out;
+  transform: translateY(-50px); /* Adjust the distance as needed */
+}

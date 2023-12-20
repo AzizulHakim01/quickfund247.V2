@@ -2,37 +2,15 @@ import { faBars, faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import BusinessFundingDropdown from "./BusinessFundingDropdown";
 
 const Header = () => {
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState(false);
-
-  // Add a state to track the scroll position
-  const [isSticky, setIsSticky] = useState(false);
-
-  // Add an event listener to handle scrolling
-  const handleScroll = () => {
-    const scrollPosition = window.scrollY;
-    if (scrollPosition > 0) {
-      setIsSticky(true);
-    } else {
-      setIsSticky(false);
-    }
-  };
-
-  // // Attach the scroll event listener when the component mounts
-  // useEffect(() => {
-  //   window.addEventListener("scroll", handleScroll);
-  //   // Clean up the event listener when the component unmounts
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
   
   return (
-    <header className={`w-full bg-white md:p-0 p-4 ${
-      isSticky ? "fixed top-0 z-50 shadow-md" : "md:p-0 p-4"
-    }`}>
+    <header className={`w-full bg-white md:p-0 p-4`}>
       <div className="max-w-screen-xl w-full md:mx-auto md:h-[200px] flex items-center justify-between">
         {/* Header Logo div */}
         <div className="">
@@ -64,78 +42,9 @@ const Header = () => {
                   Home
                 </Link>
               </li>
-              <li className="relative group z-10">
-                <p className="cursor-pointer hover:text-[#00D1A9] transition-all duration-300 ease-in-out">
-                  Business Funding
-                </p>
-                <div className="hidden bg-white absolute z-10 top-full left-0 w-96 p-4 mb-4 group-hover:block ">
-                  <Link
-                    to={"/long-term"}
-                    className={`hover:text-[#00D1A9] ${
-                      location.pathname == "/long-term"
-                        ? "text-[#00D1A9] font-bold"
-                        : ""
-                    }`}
-                  >
-                    Long Term
-                  </Link>
-                  <br />
-                  <Link
-                    to={"/sba"}
-                    className={`hover:text-[#00D1A9] ${
-                      location.pathname == "/sba"
-                        ? "text-[#00D1A9] font-bold"
-                        : ""
-                    }`}
-                  >
-                    SBA Loans
-                  </Link>
-                  <br />
-                  <Link
-                    to={"/loc"}
-                    className={`hover:text-[#00D1A9] ${
-                      location.pathname == "/loc"
-                        ? "text-[#00D1A9] font-bold"
-                        : ""
-                    }`}
-                  >
-                    Business Line of Credit
-                  </Link>
-                  <br />
-                  <Link
-                    to={"/equipment"}
-                    className={`hover:text-[#00D1A9] ${
-                      location.pathname == "/equipment"
-                        ? "text-[#00D1A9] font-bold"
-                        : ""
-                    }`}
-                  >
-                    Equipment Financing
-                  </Link>
-                  <br />
-                  <Link
-                    to={"/short-term"}
-                    className={`hover:text-[#00D1A9] ${
-                      location.pathname == "/short-term"
-                        ? "text-[#00D1A9] font-bold"
-                        : ""
-                    }`}
-                  >
-                    Short Term
-                  </Link>
-                  <br />
-                  <Link
-                    to={"/working-capital"}
-                    className={`hover:text-[#00D1A9] ${
-                      location.pathname == "/working-capital"
-                        ? "text-[#00D1A9] font-bold"
-                        : ""
-                    }`}
-                  >
-                    Working Capital / Invoice Factoring
-                  </Link>
-                </div>
-              </li>
+              
+
+              <BusinessFundingDropdown location={location} />
               <li className="relative group bg-white">
                 <p className="cursor-pointer hover:text-[#00d1a9]">Resources</p>
                 <div className="hidden absolute z-10 top-full left-0 w-96 p-4 space-y-2 group-hover:block">
