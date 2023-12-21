@@ -12,68 +12,84 @@ const Equipment = () => {
                 Equipment Financing
               </h2>
               <h1 className="text-5xl font-bold text-[#00d1a9]">
-                Low rates and flexible repayment <b>.</b>
+                Finance new or used equipment.
               </h1>
               <p className="text-xl font-bold text-slate-600">
-                A business term loan can help your business with a low rate and
-                flexible, fixed monthly payments.
+                Equipment financing can help you acquire new or used equipment
+                at a low payment and rate.
               </p>
             </div>
             <div className="">
-              <img src="/images/small_business.jpg" alt="" />
+              <img src="/images/shutterstock_1031172445.jpg" alt="" />
             </div>
           </div>
           <div className="flex flex-col justify-center items-center md:mb-16">
             <h1 className="text-4xl font-bold text-[#00d1a9] md:w-[600px] text-center">
-              A business term loan can help your business .
+              Equipment financing can help your business.
             </h1>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-24 mt-16">
               <div className="">
                 <div className="flex gap-4 items-center">
-                  <img src="/images/loc.png" alt="" className="w-16" />
+                  <img
+                    src="/images/Preserve_Cash_Flow.png"
+                    alt=""
+                    className="w-16"
+                  />
                   <h1 className="text-2xl font-bold text-slate-700">
-                    Capture Opportunities
+                    Preserve Cash Flow
                   </h1>
                 </div>
                 <p className="text-slate-900 text-xl text-justify">
-                  Use a business term loan to get large order discounts, buy out
-                  a partner, or win a contract over your competition.
+                  Equipment financing can help preserve cash flow to allocate
+                  towards other areas of your business.
                 </p>
               </div>
               <div className="">
                 <div className="flex gap-4 items-center">
-                  <img src="/images/loc.png" alt="" className="w-16" />
+                  <img
+                    src="/images/Avoid_Obsolescence.png"
+                    alt=""
+                    className="w-16"
+                  />
                   <h1 className="text-2xl font-bold text-slate-700">
-                    Capture Opportunities
+                    Avoid Obsolescence
                   </h1>
                 </div>
                 <p className="text-slate-900 text-xl text-justify">
-                  Use a business term loan to get large order discounts, buy out
-                  a partner, or win a contract over your competition.
+                  Equipment financing enables you to acquire modern equipment
+                  and technology updates.
                 </p>
               </div>
               <div className="">
                 <div className="flex gap-4 items-center">
-                  <img src="/images/loc.png" alt="" className="w-16" />
+                  <img
+                    src="/images/Hedge_Against_Inflation.png"
+                    alt=""
+                    className="w-16"
+                  />
                   <h1 className="text-2xl font-bold text-slate-700">
-                    Capture Opportunities
+                    Hedge Against Inflation
                   </h1>
                 </div>
                 <p className="text-slate-900 text-xl text-justify">
-                  Use a business term loan to get large order discounts, buy out
-                  a partner, or win a contract over your competition.
+                  Equipment financing may hedge inflation risk by delaying your
+                  outlay of funds over time.
                 </p>
               </div>
               <div className="">
                 <div className="flex gap-4 items-center">
-                  <img src="/images/loc.png" alt="" className="w-16" />
+                  <img
+                    src="/images/TaxIncentives.png"
+                    alt=""
+                    className="w-16"
+                  />
                   <h1 className="text-2xl font-bold text-slate-700">
-                    Capture Opportunities
+                    Tax Incentives
                   </h1>
                 </div>
                 <p className="text-slate-900 text-xl text-justify">
-                  Use a business term loan to get large order discounts, buy out
-                  a partner, or win a contract over your competition.
+                  Monthly payments may be deducted as an expense or deduct the
+                  full purchase price with Section 179 tax deduction.
                 </p>
               </div>
             </div>
@@ -85,15 +101,21 @@ const Equipment = () => {
                 Equipment Financing
               </h2>
               <h1 className="text-5xl font-bold text-[#00d1a9]">
-                Low rates and flexible repayment <b>.</b>
+                Empowering growth, one machine at a time.
               </h1>
               <p className="text-xl font-bold text-slate-600">
-                A business term loan can help your business with a low rate and
-                flexible, fixed monthly payments.
+                Equipment financing is a type of business financing that
+                specifically focuses on helping businesses acquire the equipment
+                they need to operate. This can be particularly beneficial for
+                companies that rely on expensive machinery, vehicles,
+                technology, or other types of equipment.
               </p>
             </div>
             <div className="">
-              <img src="/images/small_business.jpg" alt="" />
+              <img
+                src="/images/6155e080258cd3d84909abc1_1100w Equipment leasing vs Equipment FInancing Agreements.jpeg"
+                alt=""
+              />
             </div>
           </div>
         </div>

@@ -27,30 +27,30 @@ const Faq = () => {
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4 lg:w-1/2">
               <FaqComponent
-                header="What is Lorem Ipsum?"
-                text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the lea;"
+                header="What is a line of credit, and how does it work?"
+                text="A line of credit is a flexible borrowing arrangement that allows you to access funds up to a predetermined limit. You only pay interest on the amount you use, and as you repay, the funds become available again for future use."
               />
               <FaqComponent
-                header="Why do we use it??"
-                text="t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for ."
+                header="Who can apply for a line of credit?"
+                text=" Individuals and businesses with good credit and a stable financial history are eligible to apply for a line of credit. Lenders typically assess creditworthiness and may consider factors like income, debt, and business performance."
               />
               <FaqComponent
-                header="Where does it come from??"
-                text="IContrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem ."
+                header="What can I use a line of credit for??"
+                text="A line of credit can be used for various purposes, including covering unexpected expenses, managing cash flow, financing projects, or addressing short-term financial needs. It provides flexibility for both personal and business financial requirements."
               />
             </div>
             <div className="w-full px-4 lg:w-1/2">
               <FaqComponent
-                header="Where can I get some?"
-                text="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+                header="Is collateral required for a line of credit?"
+                text="Depending on the type (secured or unsecured), a line of credit may or may not require collateral. Secured lines of credit are backed by assets, while unsecured lines rely on the borrower's creditworthiness. Terms vary among lenders."
               />
               <FaqComponent
-                header="Where can I get some??"
-                text="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+                header="How do I repay a line of credit?"
+                text="Repayment terms vary, but generally, you'll make monthly payments based on the outstanding balance and accrued interest. You have the flexibility to pay off the full amount or make minimum payments, as long as you stay within the agreed terms."
               />
               <FaqComponent
-                header="Where can I get some??"
-                text="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+                header="How do I apply for a line of credit?"
+                text="To apply, visit our website and fill out the online application. You'll need to provide information about your financial situation, credit history, and the purpose of the line of credit. Our team will then review your application and contact you with the next steps."
               />
             </div>
           </div>

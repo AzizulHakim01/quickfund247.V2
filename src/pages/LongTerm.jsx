@@ -101,18 +101,22 @@ const LongTerm = () => {
           <div className="grid md:grid-cols-2 grid-cols-1 gap-16 items-center py-2 mb-4 mt-16 ">
             <div className="flex flex-col gap-8 order-last">
               <h2 className="text-slate-700 text-xl font-semibold">
-                Long Term Loans
+                Business Term Loans
               </h2>
               <h1 className="text-5xl font-bold text-[#00d1a9]">
-                Low rates and flexible repayment <b>.</b>
+                Competitive rates and adaptable repayment options. <b>.</b>
               </h1>
               <p className="text-xl font-bold text-slate-600">
-                A business term loan can help your business with a low rate and
-                flexible, fixed monthly payments.
+                A term loan for your business offers favorable interest rates
+                and provides the convenience of flexible yet stable monthly
+                payments.
               </p>
             </div>
             <div className="">
-              <img src="/images/small_business.jpg" alt="" />
+              <img
+                src="/images/small-business-manager-her-workshop.jpg"
+                alt=""
+              />
             </div>
           </div>
         </div>

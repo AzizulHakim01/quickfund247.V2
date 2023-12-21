@@ -31,7 +31,7 @@ const BusinessFundingDropdown = ({ location }) => {
               location.pathname === "/long-term" ? "text-[#00D1A9] font-bold" : ""
             }`}
           >
-            Long Term
+            Business Term Loan
           </Link>
         </motion.div>
         <motion.div variants={linkVariants}>
@@ -62,16 +62,6 @@ const BusinessFundingDropdown = ({ location }) => {
             }`}
           >
             Equipment Financing
-          </Link>
-        </motion.div>
-        <motion.div variants={linkVariants}>
-          <Link
-            to={"/short-term"}
-            className={`hover:text-[#00D1A9] ${
-              location.pathname == "/short-term" ? "text-[#00D1A9] font-bold" : ""
-            }`}
-          >
-            Short Term
           </Link>
         </motion.div>
         <motion.div variants={linkVariants}>
