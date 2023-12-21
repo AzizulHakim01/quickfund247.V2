@@ -19,8 +19,8 @@ const WorkingCap = () => {
                 flexible, fixed monthly payments.
               </p>
             </div>
-            <div className="">
-              <img src="/images/small_business.jpg" alt="" />
+            <div className="h-[80%] overflow-hidden rounded-md ">
+              <img src="/images/miki.jpeg" alt="" className="hover:opacity-100 opacity-80 transition-all "/>
             </div>
           </div>
           <div className="flex flex-col justify-center items-center md:mb-16">
@@ -93,7 +93,7 @@ const WorkingCap = () => {
               </p>
             </div>
             <div className="">
-              <img src="/images/small_business.jpg" alt="" />
+              <img src="/images/chef.jpg" alt="" className="rounded-md opacity-80 hover:opacity-100 transition-all"/>
             </div>
           </div>
         </div>

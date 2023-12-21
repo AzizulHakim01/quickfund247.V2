@@ -29,53 +29,70 @@ const LongTerm = () => {
             <h1 className="text-4xl font-bold text-[#00d1a9] md:w-[600px] text-center">
               A business term loan can help your business .
             </h1>
-            <div className="grid md:md:grid-cols-2 grid-cols-1 grid-cols-1 gap-24 mt-16">
+            <div className="grid md:md:grid-cols-2 grid-cols-1 gap-24 mt-16">
               <div className="">
                 <div className="flex gap-4 items-center">
-                  <img src="/images/loc.png" alt="" className="w-16" />
+                  <img src="/images/cap_inj.png" alt="" className="w-16" />
                   <h1 className="text-2xl font-bold text-slate-700">
-                    Capture Opportunities
+                    Capital Injection
                   </h1>
                 </div>
                 <p className="text-slate-900 text-xl text-justify">
-                  Use a business term loan to get large order discounts, buy out
-                  a partner, or win a contract over your competition.
+                  A business term loan provides a significant infusion of
+                  capital, enabling your business to fund expansion, purchase
+                  equipment, or meet other financial needs.
                 </p>
               </div>
               <div className="">
                 <div className="flex gap-4 items-center">
-                  <img src="/images/loc.png" alt="" className="w-16" />
+                  <img
+                    src="/images/Predictable_Repayment.png"
+                    alt=""
+                    className="w-16"
+                  />
                   <h1 className="text-2xl font-bold text-slate-700">
-                    Capture Opportunities
+                    Predictable Repayment
                   </h1>
                 </div>
                 <p className="text-slate-900 text-xl text-justify">
-                  Use a business term loan to get large order discounts, buy out
-                  a partner, or win a contract over your competition.
+                  Unlike some forms of financing, term loans come with fixed
+                  repayment schedules, making it easier for businesses to plan
+                  and budget for repayments.
                 </p>
               </div>
               <div className="">
                 <div className="flex gap-4 items-center">
-                  <img src="/images/loc.png" alt="" className="w-16" />
+                  <img
+                    src="/images/Long-Term_Planning.png"
+                    alt=""
+                    className="w-16"
+                  />
                   <h1 className="text-2xl font-bold text-slate-700">
-                    Capture Opportunities
+                    Long-Term Planning
                   </h1>
                 </div>
                 <p className="text-slate-900 text-xl text-justify">
-                  Use a business term loan to get large order discounts, buy out
-                  a partner, or win a contract over your competition.
+                  With extended repayment periods, term loans are suitable for
+                  long-term projects or investments, offering flexibility for
+                  businesses to implement strategic initiatives without
+                  immediate financial strain.
                 </p>
               </div>
               <div className="">
                 <div className="flex gap-4 items-center">
-                  <img src="/images/loc.png" alt="" className="w-16" />
+                  <img
+                    src="/images/Building_Credit_History.png"
+                    alt=""
+                    className="w-16"
+                  />
                   <h1 className="text-2xl font-bold text-slate-700">
-                    Capture Opportunities
+                    Building Credit History
                   </h1>
                 </div>
                 <p className="text-slate-900 text-xl text-justify">
-                  Use a business term loan to get large order discounts, buy out
-                  a partner, or win a contract over your competition.
+                  Consistent and timely repayment of a term loan can positively
+                  impact your business credit score, potentially opening doors
+                  to better financing options in the future.
                 </p>
               </div>
             </div>
