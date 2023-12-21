@@ -106,7 +106,7 @@ const Loc = () => {
               </h2>
               <h1 className="text-5xl font-bold text-[#00d1a9]">
                 Financial flexibility for evolving opportunities and
-                challenges. <b>.</b>
+                challenges.
               </h1>
               <p className="text-xl font-bold text-slate-600">
                 A line of credit is a financial tool that can be beneficial for

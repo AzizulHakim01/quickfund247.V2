@@ -27,7 +27,7 @@ const Header = () => {
             </p>
             <p className="text-xl uppercase">
               <FontAwesomeIcon icon={faEnvelope} className="text-[#00D1A9]" />{" "}
-              info@quickfund247.com
+              submissions@quickfund247.com
             </p>
           </div>
           <nav className="md:flex gap-8 border-t-2 border-b-2 py-2 items-center justify-between">

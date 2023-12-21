@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { message } from "antd";
 import axios from "axios";
+import Loader from "./Loader";
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -20,13 +21,17 @@ const Contact = () => {
   const [lMonth, setLMonth] = useState("");
   const [bMonth, setBMonth] = useState("");
   const [history, setHistory] = useState("");
-  const [pCapital, setPCapital] = useState("")
+  const [pCapital, setPCapital] = useState("");
+  const [file, setFile] = useState([]);
+  const [showTextArea, setShowTextArea] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const todayDate = new Date().getDate();
   const todayMonth = new Date().getMonth();
   const todayYear = new Date().getFullYear();
 
-  const today = `${todayDate}/${todayMonth + 1}/${todayYear}`;
+  const today = `${todayDate}-${todayMonth + 1}-${todayYear}`;
 
   const data = {
     business_name: name,
@@ -46,17 +51,76 @@ const Contact = () => {
     before_last_month: bMonth,
     history: history,
     date: today,
-    purpose_capital: pCapital
+    purpose_capital: pCapital,
   };
-  const [file, setFile] = useState([]);
+
+  const [selectedFile, setSelectedFile] = useState([]);
+  // Add this line to define selectedFile state
+
+  // ... (other state variables)
+
   // Handle sheet upload
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     try {
+      if (!selectedFiles.length) { // Change selectedFile to selectedFiles
+        console.error("No file selected");
+        return;
+      }
+  
+      setIsLoading(true);
+  
+      // Assuming you have an API endpoint for the file upload
+      const uploadPromises = selectedFiles.map(async (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+  
+        return new Promise((resolve, reject) => {
+          reader.onloadend = async () => {
+            const result = reader.result;
+            const base64Data = result.split("base64,")[1];
+  
+            const formData = {
+              base64: base64Data,
+              type: file.type,
+              name: `${name.replace(/\s+/g, "_").toLowerCase()}_${
+                file.name
+              }_${today}`,
+            };
+  
+            try {
+              const response = await fetch(
+                "https://script.google.com/macros/s/AKfycbyDIp7uQ98tetpZv9efGhApuhRxYJ5U_R4cpXhy8gDh-rIHpVFBnV4d6eTJFNn8u3oV/exec",
+                {
+                  method: "POST",
+                  body: JSON.stringify(formData),
+                }
+              );
+  
+              if (!response.ok) {
+                reject(`File upload failed with status ${response.status}`);
+                return;
+              }
+  
+              resolve(); // Resolve the promise when the file is successfully uploaded
+            } catch (error) {
+              reject(error);
+            }
+          };
+        });
+      });
+  
+      // Wait for all file uploads to complete before proceeding
+      await Promise.all(uploadPromises);
+  
+      // Now, proceed with submitting other form data
       const res = await axios.post(
         "https://sheet.best/api/sheets/8ec7d0cf-206a-4a07-9ac6-b2dffa596d5d",
         data
       );
+  
+      // Reset form values
       setAddress("")
       setAmount("")
       setBMonth("")
@@ -75,14 +139,16 @@ const Contact = () => {
       setIndustry("")
       setFile([])
       setPCapital("")
+      setSelectedFiles([])
+  
       message.success("Data updated Successfully");
     } catch (error) {
       console.error(error);
-      message.error("There is a error, check console");
+      message.error("There is an error, check the console");
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const [showTextArea, setShowTextArea] = useState(false);
 
   const handleRadioChange = (event) => {
     setShowTextArea(event.target.value === "yes");
@@ -90,42 +156,14 @@ const Contact = () => {
 
   // Upload handle
 
-  
-
+  // Upload handle
   const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile([...file, selectedFile]);
-
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      const result = reader.result;
-      const base64Data = result.split("base64,")[1];
-
-      const formData = {
-        base64: base64Data,
-        type: selectedFile.type,
-        name: selectedFile.name,
-      };
-
-      // Assuming you have an API endpoint for the upload
-      fetch(
-        "https://script.google.com/macros/s/AKfycbyDIp7uQ98tetpZv9efGhApuhRxYJ5U_R4cpXhy8gDh-rIHpVFBnV4d6eTJFNn8u3oV/exec",
-        {
-          method: "POST",
-          body: JSON.stringify(formData),
-        }
-      )
-        .then((response) => response.text())
-        .then((data) => console.log(data));
-    };
-
-    reader.readAsDataURL(selectedFile);
+    const newFiles = event.target.files;
+    setSelectedFiles([...selectedFiles, ...newFiles]);
   };
-
-
   return (
     <Layout>
+      {isLoading && <Loader />}
       <div className="">
         <form
           className="max-w-screen-xl mx-auto flex flex-col gap-16"
@@ -233,7 +271,7 @@ const Contact = () => {
                   name="amount"
                   value={amount}
                   onChange={(e) =>
-                    setAmount(parseFloat(e.target.value).toFixed(2))
+                    setAmount(e.target.value)
                   }
                 />
               </div>
@@ -412,7 +450,8 @@ const Contact = () => {
                   htmlFor="small-input"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Month before Last Revenue <span className="text-red-700">*</span>
+                  Month before Last Revenue{" "}
+                  <span className="text-red-700">*</span>
                 </label>
                 <input
                   type="text"
@@ -536,7 +575,6 @@ const Contact = () => {
                     accept=".pdf"
                     multiple
                     onChange={handleFileChange}
-                    required
                   />
                 </label>
               </div>
@@ -544,9 +582,9 @@ const Contact = () => {
                 <p>
                   You Selected These Files:{" "}
                   <span>
-                    {file.length > 0 && (
+                    {selectedFiles.length > 0 && (
                       <ul className="list-disc text-sm text-gray-900 dark:text-gray-300">
-                        {file.map((file, index) => (
+                        {selectedFiles.map((file, index) => (
                           <li key={index}>{file.name}</li>
                         ))}
                       </ul>
