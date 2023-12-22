@@ -144,7 +144,7 @@ const Contact = () => {
       message.success("Data updated Successfully");
     } catch (error) {
       console.error(error);
-      message.error("There is an error, check the console");
+      message.error("There is an error, Contact Quick Funds 247");
     } finally {
       setIsLoading(false);
     }
