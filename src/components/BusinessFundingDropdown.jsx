@@ -14,7 +14,7 @@ const BusinessFundingDropdown = ({ location }) => {
 
   return (
     <motion.li className="relative group z-10">
-      <p className="cursor-pointer hover:text-[#00D1A9] transition-all duration-300 ease-in-out">
+      <p className="cursor-pointer hover:text-[#00D1A9] text-slate-700 transition-all duration-300 ease-in-out">
         Business Funding
       </p>
       <motion.div

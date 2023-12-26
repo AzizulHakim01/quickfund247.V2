@@ -523,9 +523,9 @@ console.log(formData.files)
                   {formData.files.length > 0 && (
         <ol className="text-sm text-gray-900 dark:text-gray-300">
           {formData.files.map((file) => (
-        <div key={file.id}>
+        <div key={file.id} className="flex gap-4 items-center mt-4">
           <p>{file.name}</p>
-          <button onClick={() => handleRemoveFile(file.id)}>Remove</button>
+          <button onClick={() => handleRemoveFile(file.id)} className="text-white bg-red-600 hover:bg-red-700 font-semibold px-4 py-2 rounded-md">Remove</button>
         </div>
       ))}
         </ol>

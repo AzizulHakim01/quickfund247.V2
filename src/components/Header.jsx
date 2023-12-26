@@ -46,8 +46,8 @@ const Header = () => {
 
               <BusinessFundingDropdown location={location} />
               <li className="relative group bg-white">
-                <p className="cursor-pointer hover:text-[#00d1a9]">Resources</p>
-                <div className="hidden absolute z-10 top-full left-0 w-96 p-4 space-y-2 group-hover:block">
+                <p className="cursor-pointer hover:text-[#00d1a9] text-slate-800">Resources</p>
+                <div className="hidden absolute z-10 top-full left-0 w-96 p-4 space-y-2 group-hover:block bg-white">
                   <Link
                     to={"/faq"}
                     className={`hover:text-[#00D1A9] ${
