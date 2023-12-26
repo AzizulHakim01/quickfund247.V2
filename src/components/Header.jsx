@@ -25,9 +25,9 @@ const Header = () => {
               <FontAwesomeIcon icon={faPhone} className="text-[#00D1A9]" /> Get
               A Free Quote +1 (929) 462-7184
             </p>
-            <p className="text-xl uppercase">
+            <p className="text-xl">
               <FontAwesomeIcon icon={faEnvelope} className="text-[#00D1A9]" />{" "}
-              submissions@quickfund247.com
+              submissions@quickfunds247.com
             </p>
           </div>
           <nav className="md:flex gap-8 border-t-2 border-b-2 py-2 items-center justify-between">

@@ -10,6 +10,8 @@ import WorkingCap from "./pages/WorkingCap"
 import Faq from "./pages/Faq"
 import PrivacyPolicy from "./pages/PrivacyPolicy"
 import Contact from "./pages/Contact"
+import Thanks from "./pages/Thanks"
+import ViewForm from "./pages/ViewForm"
 
 function App() {
   
@@ -28,6 +30,8 @@ function App() {
           <Route path="/faq" element={<Faq/>}/>
           <Route path="/privacy" element={<PrivacyPolicy/>}/>
           <Route path="/contact" element={<Contact/>}/>
+          <Route path="/thank" element={<Thanks/>}/>
+          <Route path="/view" element={<ViewForm/>}/>
       </Routes>
     </BrowserRouter>
   )

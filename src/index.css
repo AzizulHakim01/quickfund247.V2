@@ -18,3 +18,9 @@ textArea{
   transition: transform 0.3s ease-out;
   transform: translateY(-50px); /* Adjust the distance as needed */
 }
+p{
+  color:#00d1a9;
+}
+span{
+  color: rgb(51 65 85)
+}

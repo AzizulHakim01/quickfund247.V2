@@ -3,6 +3,11 @@ import Layout from "../components/Layout";
 import { message } from "antd";
 import axios from "axios";
 import Loader from "./Loader";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { selectFormData } from "../reducers/formDataReducer";
+import { updateFormData, addFile, removeFile} from "../reducers/formDataReducer";
+import { v4 as uuidv4 } from 'uuid';
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -22,7 +27,6 @@ const Contact = () => {
   const [bMonth, setBMonth] = useState("");
   const [history, setHistory] = useState("");
   const [pCapital, setPCapital] = useState("");
-  const [file, setFile] = useState([]);
   const [showTextArea, setShowTextArea] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -32,6 +36,8 @@ const Contact = () => {
   const todayYear = new Date().getFullYear();
 
   const today = `${todayDate}-${todayMonth + 1}-${todayYear}`;
+
+  const navigate = useNavigate()
 
   const data = {
     business_name: name,
@@ -54,113 +60,45 @@ const Contact = () => {
     purpose_capital: pCapital,
   };
 
-  const [selectedFile, setSelectedFile] = useState([]);
-  // Add this line to define selectedFile state
-
-  // ... (other state variables)
-
-  // Handle sheet upload
-  const handleSubmit = async (e) => {
-    e.preventDefault();
   
-    try {
-      if (!selectedFiles.length) { // Change selectedFile to selectedFiles
-        console.error("No file selected");
-        return;
-      }
-  
-      setIsLoading(true);
-  
-      // Assuming you have an API endpoint for the file upload
-      const uploadPromises = selectedFiles.map(async (file) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-  
-        return new Promise((resolve, reject) => {
-          reader.onloadend = async () => {
-            const result = reader.result;
-            const base64Data = result.split("base64,")[1];
-  
-            const formData = {
-              base64: base64Data,
-              type: file.type,
-              name: `${name.replace(/\s+/g, "_").toLowerCase()}_${
-                file.name
-              }_${today}`,
-            };
-  
-            try {
-              const response = await fetch(
-                "https://script.google.com/macros/s/AKfycbyDIp7uQ98tetpZv9efGhApuhRxYJ5U_R4cpXhy8gDh-rIHpVFBnV4d6eTJFNn8u3oV/exec",
-                {
-                  method: "POST",
-                  body: JSON.stringify(formData),
-                }
-              );
-  
-              if (!response.ok) {
-                reject(`File upload failed with status ${response.status}`);
-                return;
-              }
-  
-              resolve(); // Resolve the promise when the file is successfully uploaded
-            } catch (error) {
-              reject(error);
-            }
-          };
-        });
-      });
-  
-      // Wait for all file uploads to complete before proceeding
-      await Promise.all(uploadPromises);
-  
-      // Now, proceed with submitting other form data
-      const res = await axios.post(
-        "https://sheet.best/api/sheets/8ec7d0cf-206a-4a07-9ac6-b2dffa596d5d",
-        data
-      );
-  
-      // Reset form values
-      setAddress("")
-      setAmount("")
-      setBMonth("")
-      setCMonth("")
-      setName("")
-      setDba("")
-      setEmail("")
-      setDate("")
-      setCity("")
-      setState("")
-      setRevenue("")
-      setFico("")
-      setLMonth("")
-      setHistory("")
-      setNumber("")
-      setIndustry("")
-      setFile([])
-      setPCapital("")
-      setSelectedFiles([])
-  
-      message.success("Data updated Successfully");
-    } catch (error) {
-      console.error(error);
-      message.error("There is an error, Contact Quick Funds 247");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const dispatch = useDispatch();
+  const formData = useSelector(selectFormData)
+  const handleSubmit = () =>{
+    navigate("/view")
+    dispatch(updateFormData(data))
+  }
 
   const handleRadioChange = (event) => {
     setShowTextArea(event.target.value === "yes");
   };
 
-  // Upload handle
 
   // Upload handle
   const handleFileChange = (event) => {
     const newFiles = event.target.files;
+  
+    // Iterate over the files and dispatch addFile for each file
+    Array.from(newFiles).forEach((file) => {
+      const fileId = uuidv4();
+      dispatch(addFile({ id: fileId, name: file.name }));
+    });
+  
+    // Update the selectedFiles state if needed
     setSelectedFiles([...selectedFiles, ...newFiles]);
   };
+  
+console.log(formData.files)
+  const handleRemoveFile = (fileId) => {
+    // Dispatch action to remove file
+    dispatch(removeFile(fileId));
+  
+    // Get the updated files array after removal
+    const updatedFiles = formData.files.filter((file) => file.id !== fileId);
+  
+    // Update the form data with the updated files array
+    dispatch(updateFormData({ files: updatedFiles }));
+  };
+  
   return (
     <Layout>
       {isLoading && <Loader />}
@@ -198,7 +136,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"legalBusinessName"}
-                  value={name}
+                  value={formData.business_name? formData.business_name: name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
@@ -216,7 +154,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"dba"}
-                  value={dba}
+                  value={formData.business_type? formData.business_type:dba}
                   onChange={(e) => setDba(e.target.value)}
                 />
               </div>
@@ -233,7 +171,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"email"}
-                  value={email}
+                  value={formData.business_email? formData.business_email:email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
@@ -250,7 +188,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"number"}
-                  value={number}
+                  value={formData.business_number? formData.business_number:number}
                   onChange={(e) => setNumber(e.target.value)}
                 />
               </div>
@@ -269,7 +207,7 @@ const Contact = () => {
                   required
                   placeholder="$0.00 - $5,000,000"
                   name="amount"
-                  value={amount}
+                  value={formData.amount_asking?formData.amount_asking:amount}
                   onChange={(e) =>
                     setAmount(e.target.value)
                   }
@@ -289,7 +227,7 @@ const Contact = () => {
                   required
                   placeholder="MM/DD/YYYY"
                   name="startDate"
-                  value={date}
+                  value={formData.business_date?formData.business_date:date}
                   onChange={(e) => setDate(e.target.value)}
                 />
               </div>
@@ -306,7 +244,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"address"}
-                  value={address}
+                  value={formData.address?formData.address:address}
                   onChange={(e) => setAddress(e.target.value)}
                 />
               </div>
@@ -323,7 +261,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"city"}
-                  value={city}
+                  value={formData.city?formData.city:city}
                   onChange={(e) => setCity(e.target.value)}
                 />
               </div>
@@ -340,7 +278,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name="state"
-                  value={state}
+                  value={formData.state?formData.state:state}
                   onChange={(e) => setState(e.target.value)}
                 />
               </div>
@@ -359,7 +297,7 @@ const Contact = () => {
                   required
                   placeholder="Eg. Retail, Manufacturing etc."
                   name={"industry"}
-                  value={industry}
+                  value={formData.industry?formData.industry:industry}
                   onChange={(e) => setIndustry(e.target.value)}
                 />
               </div>
@@ -388,7 +326,7 @@ const Contact = () => {
                   required
                   placeholder="$0 - $15M"
                   name={"revenue"}
-                  value={revenue}
+                  value={formData.monthly_revenue?formData.monthly_revenue:revenue}
                   onChange={(e) => setRevenue(e.target.value)}
                 />
               </div>
@@ -405,7 +343,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"fico"}
-                  value={fico}
+                  value={formData.fico?formData.fico:fico}
                   onChange={(e) => setFico(e.target.value)}
                 />
               </div>
@@ -424,7 +362,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"cMonth"}
-                  value={cMonth}
+                  value={formData.current_month?formData.current_month:cMonth}
                   onChange={(e) => setCMonth(e.target.value)}
                 />
               </div>
@@ -441,7 +379,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"lMonth"}
-                  value={lMonth}
+                  value={formData.last_month?formData.last_month:lMonth}
                   onChange={(e) => setLMonth(e.target.value)}
                 />
               </div>
@@ -459,7 +397,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"bMonth"}
-                  value={bMonth}
+                  value={formData.before_last_month?formData.before_last_month:bMonth}
                   onChange={(e) => setBMonth(e.target.value)}
                 />
               </div>
@@ -516,7 +454,7 @@ const Contact = () => {
                       className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Write your MCA history like how many positions/ daily, weekly or monthly.."
                       name={"history"}
-                      value={history}
+                      value={formData.history?formData.history:history}
                       onChange={(e) => setHistory(e.target.value)}
                     />
                   </div>
@@ -535,7 +473,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"purpose_capital"}
-                  value={pCapital}
+                  value={formData.purpose_capital?formData.purpose_capital:pCapital}
                   onChange={(e) => setPCapital(e.target.value)}
                 />
               </div>
@@ -582,13 +520,16 @@ const Contact = () => {
                 <p>
                   You Selected These Files:{" "}
                   <span>
-                    {selectedFiles.length > 0 && (
-                      <ul className="list-disc text-sm text-gray-900 dark:text-gray-300">
-                        {selectedFiles.map((file, index) => (
-                          <li key={index}>{file.name}</li>
-                        ))}
-                      </ul>
-                    )}
+                  {formData.files.length > 0 && (
+        <ol className="text-sm text-gray-900 dark:text-gray-300">
+          {formData.files.map((file) => (
+        <div key={file.id}>
+          <p>{file.name}</p>
+          <button onClick={() => handleRemoveFile(file.id)}>Remove</button>
+        </div>
+      ))}
+        </ol>
+      )}
                   </span>
                 </p>
               </div>
@@ -598,7 +539,7 @@ const Contact = () => {
             type="submit"
             className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
           >
-            Submit
+            Preview
           </button>
         </form>
       </div>
