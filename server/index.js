@@ -1,64 +1,62 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
-const multer = require('multer');
-const cors = require('cors')
+const cors = require('cors');
 
 const app = express();
-app.use(cors())
-const port = 3000;
+app.use(express.json({ limit: '100mb' })); // Increase payload limit
+app.use(cors());
 
-// Set up storage for multer
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const corsOptions = {
+  origin: '*', // Update this to the appropriate origin in production
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  optionsSuccessStatus: 204,
+};
 
-// Nodemailer configuration
+app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
+
+const PORT = process.env.PORT || 3000;
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'sheikhmunna887@gmail.com', // replace with your Gmail address
-    pass: 'vfqv qndn iext daeq', // replace with your Gmail password
+    user: 'sheikhmunna887@gmail.com',
+    pass: 'vfqv qndn iext daeq',
   },
 });
 
-// Express middleware to handle file uploads
-app.post('/upload', upload.array('files', 10), async (req, res) => {
-    try {
-      const pdfBuffer = req.files.find((file) => file.fieldname === 'pdf').buffer;
-      const { name } = req.body; // Extract 'business_name' from the request body
-  
-      // Construct a unique filename based on the business name
-      const pdfFilename = `${name}_Funding_Request_Application.pdf`;
-  
-      // Send email
-      await transporter.sendMail({
-        from: 'sheikhmunna887@gmail.com', // replace with your Gmail address
-        to: 'azizulhakimgps@gmail.com', // replace with recipient email
-        subject: 'Merchant Funding Request Application Received',
-        text: 'Please find attached files.',
-        attachments: [
-          {
-            filename: pdfFilename,
-            content: pdfBuffer,
-          },
-          // Add other files
-          ...(req.files
-            .filter((file) => file.fieldname !== 'pdf')
-            .map((file) => ({
-              filename: file.originalname,
-              content: file.buffer,
-              encoding: 'base64', // specify encoding
-            }))),
-        ],
-      });
-  
-      res.status(200).send('Email sent successfully.');
-    } catch (error) {
-      console.error(error);
-      res.status(500).send(`Internal Server Error: ${error.message}`);
-    }
-  });
-  
+app.post('/send-email', async (req, res) => {
+  try {
+    const { pdfDataUrl, formData } = req.body;
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+    // Convert Data URL to Buffer
+    const pdfBuffer = Buffer.from(pdfDataUrl.split(',')[1], 'base64');
+
+    // Create a unique file name
+    const fileName = `Applcation_${formData.bussiness_name}_${Date.now()}.pdf`;
+
+    const mailOptions = {
+      from: 'sheikhmunna887@gmail.com',
+      to: 'azizulhakimgps@gmail.com',
+      subject: `Merchant Funding Request Received for ${formData.bussiness_name}.`,
+      text: `Chech the Attachments for ${formData.bussiness_name}.`,
+      attachments: [
+        {
+          filename: fileName,
+          content: pdfBuffer,
+        },
+      ],
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: 'Email sent successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

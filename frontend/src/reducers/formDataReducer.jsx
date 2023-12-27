@@ -25,7 +25,7 @@ const initialState = {
     purpose_capital: "",
 
     // New field for storing filenames
-    files:[],
+    files: [],
   },
 };
 
@@ -42,10 +42,13 @@ const formSlice = createSlice({
     removeFile: (state, action) => {
       state.formData.files = state.formData.files.filter((file) => file.id !== action.payload);
     },
+    clearFiles: (state) => {
+      state.formData.files = [];
+    },
   },
 });
 
-export const { updateFormData, addFile, removeFile } = formSlice.actions;
+export const { updateFormData, addFile, removeFile, clearFiles } = formSlice.actions;
 export const selectFormData = (state) => state.form.formData;
 
 export default formSlice.reducer;

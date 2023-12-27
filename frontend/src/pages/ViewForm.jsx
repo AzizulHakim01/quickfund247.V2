@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import Layout from "../components/Layout";
-import { useSelector } from "react-redux";
-import { selectFormData } from "../reducers/formDataReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { clearFiles, selectFormData } from "../reducers/formDataReducer";
 import { useNavigate } from "react-router-dom";
 import { html2pdf } from "html2pdf.js";
 import jsPDF from "jspdf";
@@ -16,6 +16,11 @@ const ViewForm = () => {
   const formData = useSelector(selectFormData);
   const navigate = useNavigate();
   const contentRef = useRef(null)
+  const dispatch = useDispatch();
+  const selectedFiles = useSelector((state) => state.form.formData.files);
+
+  
+
 
   const handlePrint = useReactToPrint({
     content: () => document.getElementById('print-content'),
@@ -50,34 +55,62 @@ const ViewForm = () => {
       console.error("Element with id 'print-content' not found");
     }
   };
-  const files = formData.files;
 ///Handle submit
-const handleSubmit = async () => {
+const handleSubmit = async (e) => {
+  e.preventDefault();
   try {
-    setIsLoading(true)
-    const input = document.getElementById('print-content');
-    const canvas = await html2canvas(input);
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF();
-    pdf.addImage(imgData, 'PNG', 0, 0);
+    setIsLoading(true);
 
-    const filesData = {
-      pdf: pdf.output('blob'),
-      files: formData.files.map((file) => file),
-      name:formData.business_name
-    };
+    // Generate PDF and convert to Base64
+    const pdfDataUrl = await generatePdf();
 
-    const response = await axios.post('http://localhost:3000/upload', filesData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    // Send PDF data to the server
+    const response = await axios.post('http://localhost:3000/send-email', {
+      pdfDataUrl,
+      formData,
+    },{
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
     });
-    setIsLoading(false)
+
     console.log(response.data);
+    message.success('Email sent successfully');
   } catch (error) {
-    setIsLoading(false)
-    console.error('Error handling file download:', error);
+    console.error('Error sending email:', error);
+    message.error('Failed to send email');
+  } finally {
+    setIsLoading(false);
   }
+};
+
+// Function to generate PDF and return as Base64 Data URL
+const generatePdf = () => {
+  return new Promise((resolve, reject) => {
+    const input = document.getElementById('print-content');
+
+    if (input) {
+      html2canvas(input).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+          unit: 'mm',
+          format: 'a4',
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const ratio = canvas.width / canvas.height;
+        const imgWidth = pdfWidth;
+        const imgHeight = pdfWidth / ratio;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+        const pdfDataUrl = pdf.output('dataurlstring');
+        resolve(pdfDataUrl);
+      });
+    } else {
+      reject(new Error("Element with id 'print-content' not found"));
+    }
+  });
 };
 
 
