@@ -37,7 +37,7 @@ const formSlice = createSlice({
       state.formData = { ...state.formData, ...action.payload };
     },
     addFile: (state, action) => {
-      state.formData.files.push({ id: action.payload.id, name: action.payload.name });
+      state.formData.files.push({ id: action.payload.id, name: action.payload.name, URL: action.payload.URL });
     },
     removeFile: (state, action) => {
       state.formData.files = state.formData.files.filter((file) => file.id !== action.payload);

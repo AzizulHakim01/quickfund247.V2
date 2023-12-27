@@ -3,51 +3,46 @@ import Layout from "../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import { clearFiles, selectFormData } from "../reducers/formDataReducer";
 import { useNavigate } from "react-router-dom";
-import { html2pdf } from "html2pdf.js";
 import jsPDF from "jspdf";
 import { useReactToPrint } from "react-to-print";
 import html2canvas from "html2canvas";
 import axios from "axios";
-import {message} from "antd"
+import { message } from "antd";
 import Loader from "./Loader";
-
+const selectFiles = (state) => state.form.formData.files;
 const ViewForm = () => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const formData = useSelector(selectFormData);
   const navigate = useNavigate();
-  const contentRef = useRef(null)
   const dispatch = useDispatch();
-  const selectedFiles = useSelector((state) => state.form.formData.files);
-
-  
-
+  const files = useSelector(selectFiles);
 
   const handlePrint = useReactToPrint({
-    content: () => document.getElementById('print-content'),
+    content: () => document.getElementById("print-content"),
   });
 
   const handleDownload = () => {
-    const input = document.getElementById('print-content');
-  
+    const input = document.getElementById("print-content");
+
     // Ensure that the input element exists
     if (input) {
       html2canvas(input).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL("image/png");
         const pdf = new jsPDF({
-          unit: 'mm',
-          format: 'a4',
+          unit: "mm",
+          format: "a4",
         });
-  
+
         // Calculate the width and height to fit the PDF page
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
         const ratio = canvas.width / canvas.height;
         const imgWidth = pdfWidth;
         const imgHeight = pdfWidth / ratio;
-  
+
         // Add the image to the PDF
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-  
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+
         // Save the PDF with a specific filename
         pdf.save(`${formData.business_name}_Fund_Request_Application.pdf`);
       });
@@ -55,71 +50,95 @@ const ViewForm = () => {
       console.error("Element with id 'print-content' not found");
     }
   };
-///Handle submit
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    setIsLoading(true);
+  // ... (existing code)
 
-    // Generate PDF and convert to Base64
-    const pdfDataUrl = await generatePdf();
+  // Assuming 'generatePdf' function and 'files' array are defined elsewhere
 
-    // Send PDF data to the server
-    const response = await axios.post('http://localhost:3000/send-email', {
-      pdfDataUrl,
-      formData,
-    },{
-      maxContentLength: Infinity,
-      maxBodyLength: Infinity,
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
 
-    console.log(response.data);
-    message.success('Email sent successfully');
-  } catch (error) {
-    console.error('Error sending email:', error);
-    message.error('Failed to send email');
-  } finally {
-    setIsLoading(false);
-  }
-};
+      // Generate PDF and convert to Base64
+      const pdfDataUrl = await generatePdf();
 
-// Function to generate PDF and return as Base64 Data URL
-const generatePdf = () => {
-  return new Promise((resolve, reject) => {
-    const input = document.getElementById('print-content');
+      const formDataToSend = new FormData();
+      formDataToSend.append("pdfDataUrl", pdfDataUrl);
+      formDataToSend.append("formData", JSON.stringify(formData));
 
-    if (input) {
-      html2canvas(input).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({
-          unit: 'mm',
-          format: 'a4',
-        });
-
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const ratio = canvas.width / canvas.height;
-        const imgWidth = pdfWidth;
-        const imgHeight = pdfWidth / ratio;
-
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-
-        const pdfDataUrl = pdf.output('dataurlstring');
-        resolve(pdfDataUrl);
+      // Files array contains the URLs of the files you want to upload
+      const filePromises = files.slice(0, 4).map(async (fileUrl, index) => {
+        const response = await fetch(fileUrl);
+        const blob = await response.blob();
+        formDataToSend.append(`files`, blob, `attachment_${index + 1}.pdf`);
       });
-    } else {
-      reject(new Error("Element with id 'print-content' not found"));
-    }
-  });
-};
 
+      console.log(filePromises)
+
+      await Promise.all(filePromises);
+
+      const response = await axios.post(
+        "http://localhost:3000/send-email",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      message.success("Form submitted successfully");
+    } catch (error) {
+      console.error("Error sending email:", error);
+      if (error.response) {
+        console.log("Server response data:", error.response.data);
+        console.log("Server response status:", error.response.status);
+        console.log("Server response headers:", error.response.headers);
+      }
+      message.error("Failed to send email");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // ... (remaining code)
+
+  // Function to generate PDF and return as Base64 Data URL
+  const generatePdf = () => {
+    return new Promise((resolve, reject) => {
+      const input = document.getElementById("print-content");
+
+      if (input) {
+        html2canvas(input).then((canvas) => {
+          const imgData = canvas.toDataURL("image/png");
+          const pdf = new jsPDF({
+            unit: "mm",
+            format: "a4",
+          });
+
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+          const ratio = canvas.width / canvas.height;
+          const imgWidth = pdfWidth;
+          const imgHeight = pdfWidth / ratio;
+
+          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+
+          const pdfDataUrl = pdf.output("dataurlstring");
+          resolve(pdfDataUrl);
+        });
+      } else {
+        reject(new Error("Element with id 'print-content' not found"));
+      }
+    });
+  };
 
   const handleEdit = () => {
     navigate("/contact");
   };
   return (
     <Layout>
-    {isLoading && <Loader />}
+      {isLoading && <Loader />}
       <div className="px-4">
         <div className="max-w-screen-xl  mx-auto" id="print-content">
           <img src="/images/logo.png" alt="" className="w-24 mx-auto" />
@@ -210,30 +229,40 @@ const generatePdf = () => {
                 Files Attactched :{" "}
                 {formData.files.map((file) => {
                   return (
-                    <div className="text-slate-700 lowercase">{file.name}</div>
+                    <div className="text-slate-700 lowercase" key={file.id}>{file.name}</div>
                   );
                 })}
               </p>
             </div>
           </div>
-          
         </div>
-        
       </div>
       <div className="flex justify-center mt-4 gap-8">
-            <button onClick={handlePrint} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white font-semibold transition-all">
-              Print
-            </button>
-            <button onClick={handleDownload} className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md text-white font-semibold transition-all">
-              Download
-            </button>
-            <button onClick={handleSubmit} className="bg-[#00d1a9] hover:bg-[#3cad99] px-4 py-2 rounded-md text-white font-semibold transition-all">
-              Submit
-            </button>
-            <button onClick={handleEdit} className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-white font-semibold transition-all">
-              Edit
-            </button>
-          </div>
+        <button
+          onClick={handlePrint}
+          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white font-semibold transition-all"
+        >
+          Print
+        </button>
+        <button
+          onClick={handleDownload}
+          className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md text-white font-semibold transition-all"
+        >
+          Download
+        </button>
+        <button
+          onClick={handleSubmit}
+          className="bg-[#00d1a9] hover:bg-[#3cad99] px-4 py-2 rounded-md text-white font-semibold transition-all"
+        >
+          Submit
+        </button>
+        <button
+          onClick={handleEdit}
+          className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-white font-semibold transition-all"
+        >
+          Edit
+        </button>
+      </div>
     </Layout>
   );
 };

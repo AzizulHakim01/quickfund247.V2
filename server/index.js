@@ -1,10 +1,20 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
+const multer = require('multer');
 
 const app = express();
 app.use(express.json({ limit: '100mb' })); // Increase payload limit
 app.use(cors());
+
+// Set up multer for handling file uploads
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: {
+    fieldSize: 1024 * 1024 * 100, // Example: 100 MB for field size
+  },
+});
 
 const corsOptions = {
   origin: '*', // Update this to the appropriate origin in production
@@ -15,7 +25,7 @@ const corsOptions = {
 app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -25,31 +35,40 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-app.post('/send-email', async (req, res) => {
+app.post('/send-email', upload.array('files', 10), async (req, res) => {
   try {
-    const { pdfDataUrl, formData } = req.body;
-
-    // Convert Data URL to Buffer
+    const files = req.files;
+    const pdfDataUrl = req.body.pdfDataUrl;
+    const formData = JSON.parse(req.body.formData);
     const pdfBuffer = Buffer.from(pdfDataUrl.split(',')[1], 'base64');
-
-    // Create a unique file name
-    const fileName = `Applcation_${formData.bussiness_name}_${Date.now()}.pdf`;
-
     const mailOptions = {
       from: 'sheikhmunna887@gmail.com',
       to: 'azizulhakimgps@gmail.com',
-      subject: `Merchant Funding Request Received for ${formData.bussiness_name}.`,
-      text: `Chech the Attachments for ${formData.bussiness_name}.`,
-      attachments: [
-        {
-          filename: fileName,
-          content: pdfBuffer,
-        },
-      ],
+      subject: `Merchant Funding Request Received for ${formData.business_name}.`,
+      text: `Check the Attachments for ${formData.business_name}. They are looking for ${formData.amount_asking} and their monthly revenue is ${formData.monthly_revenue}`,
+      attachments: [],
     };
 
-    await transporter.sendMail(mailOptions);
+    // Attach PDF
+    const fileName = `Application_${formData.business_name}_${formData.date}.pdf`;
+    mailOptions.attachments.push({
+      filename: fileName,
+      content: pdfBuffer,
+    });
 
+    // Attach at least 4 files
+    for (let i = 0; i < Math.min(4, files.length); i++) {
+      if (files[i]) {
+        const fileBuffer = files[i].buffer;
+        const attachmentName = files[i].originalname;
+        mailOptions.attachments.push({
+          filename: attachmentName,
+          content: fileBuffer,
+        });
+      }
+    }
+
+    await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Email sent successfully' });
   } catch (error) {
     console.error(error);

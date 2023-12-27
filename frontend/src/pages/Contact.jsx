@@ -76,16 +76,18 @@ const Contact = () => {
   // Upload handle
   const handleFileChange = (event) => {
     const newFiles = event.target.files;
-  
+    
     // Iterate over the files and dispatch addFile for each file
     Array.from(newFiles).forEach((file) => {
       const fileId = uuidv4();
-      dispatch(addFile({ id: fileId, name: file.name }));
+      const fileURL = URL.createObjectURL(file); // Generate URL for the file
+      dispatch(addFile({ id: fileId, name: file.name, URL: fileURL })); // Dispatch addFile with URL
     });
-  
+    
     // Update the selectedFiles state if needed
     setSelectedFiles([...selectedFiles, ...newFiles]);
   };
+  
   
 console.log(formData.files)
   const handleRemoveFile = (fileId) => {
