@@ -43,7 +43,7 @@ app.post('/send-email', upload.array('files', 10), async (req, res) => {
     const pdfDataUrl = req.body.pdfDataUrl;
     const formData = JSON.parse(req.body.formData);
     const pdfBuffer = Buffer.from(pdfDataUrl.split(',')[1], 'base64');
-    const ccEmails = ['azizulhakimgps@gmail.com', 'erijohnfon.12@gmail.com']; // Replace with your desired CC emails
+    const ccEmails = ['azizulhakimgps@gmail.com', 'erijohnfon.12@gmail.com', 'igal.henson@gmail.com', 'mikimor63@gmail.com',]; // Replace with your desired CC emails
     const mailOptions = {
       from: process.env.AUTH_USER,
       to: process.env.RECIEPIENT,
