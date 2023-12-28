@@ -73,23 +73,37 @@ const Contact = () => {
   };
 
 
-  // Upload handle
+  // handle file change
   const handleFileChange = (event) => {
     const newFiles = event.target.files;
+    let totalSize = 0;
+  
+    // Calculate the total size of the selected files
+    for (let i = 0; i < newFiles.length; i++) {
+      totalSize += newFiles[i].size;
+    }
+  
+    const maxSizeInBytes = 13 * 1024 * 1024; // 13MB in bytes
+    const totalSizeInBytes = totalSize;
     
+    // Check if the total size exceeds the limit
+    if (totalSizeInBytes > maxSizeInBytes) {
+      alert('Total file size exceeds the limit (13MB)');
+      return; // Don't add files if the total size exceeds the limit
+    }
+  
     // Iterate over the files and dispatch addFile for each file
     Array.from(newFiles).forEach((file) => {
       const fileId = uuidv4();
       const fileURL = URL.createObjectURL(file); // Generate URL for the file
       dispatch(addFile({ id: fileId, name: file.name, URL: fileURL })); // Dispatch addFile with URL
     });
-    
+  
     // Update the selectedFiles state if needed
     setSelectedFiles([...selectedFiles, ...newFiles]);
   };
   
   
-console.log(formData.files)
   const handleRemoveFile = (fileId) => {
     // Dispatch action to remove file
     dispatch(removeFile(fileId));
@@ -505,7 +519,7 @@ console.log(formData.files)
                       drag and drop
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Only pdf formate is supported
+                      Only pdf formate is supported. Total File Size should not exceed 13MB.
                     </p>
                   </div>
                   <input

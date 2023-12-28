@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 
 const Thanks = () => {
+  const [reloaded, setReloaded] = useState(false);
+
+  useEffect(() => {
+    const reloadedBefore = localStorage.getItem("reloaded");
+    if (!reloadedBefore) {
+      localStorage.setItem("reloaded", "true");
+      setReloaded(true);
+      window.location.reload();
+    }
+  }, []);
   return (
     <Layout>
       <div className="flex items-center justify-center md:h-[60vh]">
@@ -34,9 +44,6 @@ const Thanks = () => {
               <div className="flex gap-8 items-center">
                 <Link to={"/"} className="text-sm bg-[#00d1a9] px-6 hover:bg-[#00d1abe0] py-3 rounded-md text-white font-bold">
                   Home
-                </Link>
-                <Link to={"/view"} className="text-sm text-white font-bold  bg-[#00d1a9] px-6 hover:bg-[#00d1abe0] py-3 rounded-md">
-                  View/Print/Download Your Application
                 </Link>
               </div>
           </div>

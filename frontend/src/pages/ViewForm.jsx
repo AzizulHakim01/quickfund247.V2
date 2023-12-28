@@ -16,7 +16,6 @@ const ViewForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const files = useSelector(selectFiles);
-  console.log(files[0].URL);
 
   const handlePrint = useReactToPrint({
     content: () => document.getElementById("print-content"),
@@ -131,8 +130,9 @@ const ViewForm = () => {
           },
         }
       );
-
+      navigate("/thank")
       message.success("Form submitted successfully");
+
     } catch (error) {
       console.error("Error sending email:", error);
       if (error.response) {
