@@ -108,7 +108,7 @@ const ViewForm = () => {
             const blob = new Blob([response.data]);
 
             // Ensure that the filename ends with ".pdf"
-            const attachmentName = `attachment_${index + 1}.pdf`;
+            const attachmentName = `${formData.business_name}_${file.name}.pdf`;
 
             // Create a File object from the Blob
             const fileObject = new File([blob], attachmentName, {
