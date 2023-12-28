@@ -106,7 +106,7 @@ const Header = () => {
           />
           <div className={`${openMenu ? "" : "hidden"}`}>
             {/* Mobile menu button */}
-            <nav className="flex bg-white text-sm absolute -right-4 gap-5 w-[100vw] top-16 px-6">
+            <nav className="flex bg-white text-sm absolute -right-4 gap-5 w-[100vw] top-16 px-10 z-10">
               <ul className="flex flex-col gap-5 z-10">
                 <li>
                   <Link

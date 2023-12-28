@@ -6,8 +6,12 @@ import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectFormData } from "../reducers/formDataReducer";
-import { updateFormData, addFile, removeFile} from "../reducers/formDataReducer";
-import { v4 as uuidv4 } from 'uuid';
+import {
+  updateFormData,
+  addFile,
+  removeFile,
+} from "../reducers/formDataReducer";
+import { v4 as uuidv4 } from "uuid";
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -37,7 +41,7 @@ const Contact = () => {
 
   const today = `${todayDate}-${todayMonth + 1}-${todayYear}`;
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const data = {
     business_name: name,
@@ -60,61 +64,58 @@ const Contact = () => {
     purpose_capital: pCapital,
   };
 
-  
   const dispatch = useDispatch();
-  const formData = useSelector(selectFormData)
-  const handleSubmit = () =>{
-    navigate("/view")
-    dispatch(updateFormData(data))
-  }
+  const formData = useSelector(selectFormData);
+  const handleSubmit = () => {
+    navigate("/view");
+    dispatch(updateFormData(data));
+  };
 
   const handleRadioChange = (event) => {
     setShowTextArea(event.target.value === "yes");
   };
 
-
   // handle file change
   const handleFileChange = (event) => {
     const newFiles = event.target.files;
     let totalSize = 0;
-  
+
     // Calculate the total size of the selected files
     for (let i = 0; i < newFiles.length; i++) {
       totalSize += newFiles[i].size;
     }
-  
+
     const maxSizeInBytes = 13 * 1024 * 1024; // 13MB in bytes
     const totalSizeInBytes = totalSize;
-    
+
     // Check if the total size exceeds the limit
     if (totalSizeInBytes > maxSizeInBytes) {
-      alert('Total file size exceeds the limit (13MB)');
+      alert("Total file size exceeds the limit (13MB)");
       return; // Don't add files if the total size exceeds the limit
     }
-  
+
     // Iterate over the files and dispatch addFile for each file
     Array.from(newFiles).forEach((file) => {
       const fileId = uuidv4();
       const fileURL = URL.createObjectURL(file); // Generate URL for the file
       dispatch(addFile({ id: fileId, name: file.name, URL: fileURL })); // Dispatch addFile with URL
     });
-  
+
     // Update the selectedFiles state if needed
     setSelectedFiles([...selectedFiles, ...newFiles]);
   };
-  
-  
+
   const handleRemoveFile = (fileId) => {
     // Dispatch action to remove file
     dispatch(removeFile(fileId));
-  
+
     // Get the updated files array after removal
     const updatedFiles = formData.files.filter((file) => file.id !== fileId);
-  
+
     // Update the form data with the updated files array
     dispatch(updateFormData({ files: updatedFiles }));
   };
-  
+
   return (
     <Layout>
       {isLoading && <Loader />}
@@ -152,7 +153,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"legalBusinessName"}
-                  value={formData.business_name? formData.business_name: name}
+                  value={formData.business_name ? formData.business_name : name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
@@ -170,7 +171,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"dba"}
-                  value={formData.business_type? formData.business_type:dba}
+                  value={formData.business_type ? formData.business_type : dba}
                   onChange={(e) => setDba(e.target.value)}
                 />
               </div>
@@ -187,7 +188,9 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"email"}
-                  value={formData.business_email? formData.business_email:email}
+                  value={
+                    formData.business_email ? formData.business_email : email
+                  }
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
@@ -204,7 +207,9 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"number"}
-                  value={formData.business_number? formData.business_number:number}
+                  value={
+                    formData.business_number ? formData.business_number : number
+                  }
                   onChange={(e) => setNumber(e.target.value)}
                 />
               </div>
@@ -223,10 +228,10 @@ const Contact = () => {
                   required
                   placeholder="$0.00 - $5,000,000"
                   name="amount"
-                  value={formData.amount_asking?formData.amount_asking:amount}
-                  onChange={(e) =>
-                    setAmount(e.target.value)
+                  value={
+                    formData.amount_asking ? formData.amount_asking : amount
                   }
+                  onChange={(e) => setAmount(e.target.value)}
                 />
               </div>
               <div className="col-span-3 md:col-span-1">
@@ -243,7 +248,7 @@ const Contact = () => {
                   required
                   placeholder="MM/DD/YYYY"
                   name="startDate"
-                  value={formData.business_date?formData.business_date:date}
+                  value={formData.business_date ? formData.business_date : date}
                   onChange={(e) => setDate(e.target.value)}
                 />
               </div>
@@ -260,7 +265,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"address"}
-                  value={formData.address?formData.address:address}
+                  value={formData.address ? formData.address : address}
                   onChange={(e) => setAddress(e.target.value)}
                 />
               </div>
@@ -277,7 +282,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"city"}
-                  value={formData.city?formData.city:city}
+                  value={formData.city ? formData.city : city}
                   onChange={(e) => setCity(e.target.value)}
                 />
               </div>
@@ -294,7 +299,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name="state"
-                  value={formData.state?formData.state:state}
+                  value={formData.state ? formData.state : state}
                   onChange={(e) => setState(e.target.value)}
                 />
               </div>
@@ -313,7 +318,7 @@ const Contact = () => {
                   required
                   placeholder="Eg. Retail, Manufacturing etc."
                   name={"industry"}
-                  value={formData.industry?formData.industry:industry}
+                  value={formData.industry ? formData.industry : industry}
                   onChange={(e) => setIndustry(e.target.value)}
                 />
               </div>
@@ -342,7 +347,11 @@ const Contact = () => {
                   required
                   placeholder="$0 - $15M"
                   name={"revenue"}
-                  value={formData.monthly_revenue?formData.monthly_revenue:revenue}
+                  value={
+                    formData.monthly_revenue
+                      ? formData.monthly_revenue
+                      : revenue
+                  }
                   onChange={(e) => setRevenue(e.target.value)}
                 />
               </div>
@@ -359,7 +368,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"fico"}
-                  value={formData.fico?formData.fico:fico}
+                  value={formData.fico ? formData.fico : fico}
                   onChange={(e) => setFico(e.target.value)}
                 />
               </div>
@@ -378,7 +387,9 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"cMonth"}
-                  value={formData.current_month?formData.current_month:cMonth}
+                  value={
+                    formData.current_month ? formData.current_month : cMonth
+                  }
                   onChange={(e) => setCMonth(e.target.value)}
                 />
               </div>
@@ -395,7 +406,7 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"lMonth"}
-                  value={formData.last_month?formData.last_month:lMonth}
+                  value={formData.last_month ? formData.last_month : lMonth}
                   onChange={(e) => setLMonth(e.target.value)}
                 />
               </div>
@@ -413,7 +424,11 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"bMonth"}
-                  value={formData.before_last_month?formData.before_last_month:bMonth}
+                  value={
+                    formData.before_last_month
+                      ? formData.before_last_month
+                      : bMonth
+                  }
                   onChange={(e) => setBMonth(e.target.value)}
                 />
               </div>
@@ -470,7 +485,7 @@ const Contact = () => {
                       className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Write your MCA history like how many positions/ daily, weekly or monthly.."
                       name={"history"}
-                      value={formData.history?formData.history:history}
+                      value={formData.history ? formData.history : history}
                       onChange={(e) => setHistory(e.target.value)}
                     />
                   </div>
@@ -489,7 +504,11 @@ const Contact = () => {
                   className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                   name={"purpose_capital"}
-                  value={formData.purpose_capital?formData.purpose_capital:pCapital}
+                  value={
+                    formData.purpose_capital
+                      ? formData.purpose_capital
+                      : pCapital
+                  }
                   onChange={(e) => setPCapital(e.target.value)}
                 />
               </div>
@@ -519,7 +538,8 @@ const Contact = () => {
                       drag and drop
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Only pdf formate is supported. Total File Size should not exceed 13MB.
+                      Only pdf formate is supported. Total File Size should not
+                      exceed 13MB.
                     </p>
                   </div>
                   <input
@@ -536,16 +556,24 @@ const Contact = () => {
                 <p>
                   You Selected These Files:{" "}
                   <span>
-                  {formData.files.length > 0 && (
-        <ol className="text-sm text-gray-900 dark:text-gray-300">
-          {formData.files.map((file) => (
-        <div key={file.id} className="flex gap-4 items-center mt-4">
-          <p>{file.name}</p>
-          <button onClick={() => handleRemoveFile(file.id)} className="text-white bg-red-600 hover:bg-red-700 font-semibold px-4 py-2 rounded-md">Remove</button>
-        </div>
-      ))}
-        </ol>
-      )}
+                    {
+                      <ol className="text-sm text-gray-900 dark:text-gray-300">
+                        {formData.files.map((file) => (
+                          <div
+                            key={file.id}
+                            className="flex gap-4 items-center mt-4"
+                          >
+                            <p>{file.name}</p>
+                            <button
+                              onClick={() => handleRemoveFile(file.id)}
+                              className="text-white bg-red-600 hover:bg-red-700 font-semibold px-4 py-2 rounded-md"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ))}
+                      </ol>
+                    }
                   </span>
                 </p>
               </div>

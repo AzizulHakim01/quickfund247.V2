@@ -2,6 +2,7 @@
   "name": "quickfund247",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://quickfunds247.com",
   "type": "module",
   "scripts": {
     "dev": "vite",
