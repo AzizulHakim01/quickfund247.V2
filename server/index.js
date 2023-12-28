@@ -60,6 +60,7 @@ app.post('/send-email', upload.array('files', 10), async (req, res) => {
     for (let i = 0; i < Math.min(4, files.length); i++) {
       if (files[i]) {
         const fileBuffer = files[i].buffer;
+        console.log(fileBuffer)
         const attachmentName = files[i].originalname;
         mailOptions.attachments.push({
           filename: attachmentName,
@@ -67,6 +68,7 @@ app.post('/send-email', upload.array('files', 10), async (req, res) => {
         });
       }
     }
+    res.setHeader('Content-Type', 'application/pdf');
 
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Email sent successfully' });

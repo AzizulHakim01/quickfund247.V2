@@ -16,6 +16,7 @@ const ViewForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const files = useSelector(selectFiles);
+  console.log(files[0].URL);
 
   const handlePrint = useReactToPrint({
     content: () => document.getElementById("print-content"),
@@ -53,56 +54,6 @@ const ViewForm = () => {
   // ... (existing code)
 
   // Assuming 'generatePdf' function and 'files' array are defined elsewhere
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setIsLoading(true);
-
-      // Generate PDF and convert to Base64
-      const pdfDataUrl = await generatePdf();
-
-      const formDataToSend = new FormData();
-      formDataToSend.append("pdfDataUrl", pdfDataUrl);
-      formDataToSend.append("formData", JSON.stringify(formData));
-
-      // Files array contains the URLs of the files you want to upload
-      const filePromises = files.slice(0, 4).map(async (fileUrl, index) => {
-        const response = await fetch(fileUrl);
-        const blob = await response.blob();
-        formDataToSend.append(`files`, blob, `attachment_${index + 1}.pdf`);
-      });
-
-      console.log(filePromises)
-
-      await Promise.all(filePromises);
-
-      const response = await axios.post(
-        "http://localhost:3000/send-email",
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      message.success("Form submitted successfully");
-    } catch (error) {
-      console.error("Error sending email:", error);
-      if (error.response) {
-        console.log("Server response data:", error.response.data);
-        console.log("Server response status:", error.response.status);
-        console.log("Server response headers:", error.response.headers);
-      }
-      message.error("Failed to send email");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // ... (remaining code)
-
   // Function to generate PDF and return as Base64 Data URL
   const generatePdf = () => {
     return new Promise((resolve, reject) => {
@@ -132,6 +83,70 @@ const ViewForm = () => {
       }
     });
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+
+      // Generate PDF and convert to Base64
+      const pdfDataUrl = await generatePdf();
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("pdfDataUrl", pdfDataUrl);
+      formDataToSend.append("formData", JSON.stringify(formData));
+
+      // Use axios to fetch and append files
+      await Promise.all(
+        files.slice(0, 4).map(async (file, index) => {
+          try {
+            const response = await axios.get(file.URL, {
+              responseType: "arraybuffer",
+            });
+
+            // Convert ArrayBuffer to Blob
+            const blob = new Blob([response.data]);
+
+            // Ensure that the filename ends with ".pdf"
+            const attachmentName = `attachment_${index + 1}.pdf`;
+
+            // Create a File object from the Blob
+            const fileObject = new File([blob], attachmentName, {
+              type: "application/pdf",
+            });
+
+            // Append the File to FormData
+            formDataToSend.append("files", fileObject);
+          } catch (error) {
+            console.error(`Error fetching file ${file.name}:`, error);
+          }
+        })
+      );
+      const response = await axios.post(
+        "http://localhost:3000/send-email",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      message.success("Form submitted successfully");
+    } catch (error) {
+      console.error("Error sending email:", error);
+      if (error.response) {
+        console.log("Server response data:", error.response.data);
+        console.log("Server response status:", error.response.status);
+        console.log("Server response headers:", error.response.headers);
+      }
+      message.error("Failed to send email");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // ... (remaining code)
 
   const handleEdit = () => {
     navigate("/contact");
@@ -229,7 +244,9 @@ const ViewForm = () => {
                 Files Attactched :{" "}
                 {formData.files.map((file) => {
                   return (
-                    <div className="text-slate-700 lowercase" key={file.id}>{file.name}</div>
+                    <div className="text-slate-700 lowercase" key={file.id}>
+                      {file.name}
+                    </div>
                   );
                 })}
               </p>
