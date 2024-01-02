@@ -53,33 +53,70 @@ const ViewForm = () => {
   // ... (existing code)
 
   // Assuming 'generatePdf' function and 'files' array are defined elsewhere
-  // Function to generate PDF and return as Base64 Data URL
+  // Assuming 'generatePdf' function and 'files' array are defined elsewhere
   const generatePdf = () => {
     return new Promise((resolve, reject) => {
       const input = document.getElementById("print-content");
-
-      if (input) {
-        html2canvas(input).then((canvas) => {
-          const imgData = canvas.toDataURL("image/png");
-          const pdf = new jsPDF({
-            unit: "mm",
-            format: "a4",
-          });
-
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight();
-          const ratio = canvas.width / canvas.height;
-          const imgWidth = pdfWidth;
-          const imgHeight = pdfWidth / ratio;
-
-          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-
-          const pdfDataUrl = pdf.output("dataurlstring");
-          resolve(pdfDataUrl);
-        });
-      } else {
+  
+      if (!input) {
         reject(new Error("Element with id 'print-content' not found"));
+        return;
       }
+  
+      const inputHeight = input.scrollHeight;
+      const inputWidth = input.scrollWidth;
+  
+      html2canvas(input, {
+        scrollY: -window.scrollY,
+        windowHeight: document.documentElement.scrollHeight,
+        width: inputWidth,
+        height: inputHeight,
+        x: 0,
+        y: 0,
+      }).then((canvas) => {
+        const contentWidth = canvas.width;
+        const contentHeight = canvas.height;
+  
+        const pdf = new jsPDF({
+          unit: "px",
+          format: [contentWidth, contentHeight],
+        });
+  
+        let position = 0;
+  
+        const imageData = canvas.toDataURL("image/jpeg", 1.0);
+        pdf.addImage(imageData, "JPEG", 0, position, contentWidth, contentHeight);
+        position -= contentHeight;
+  
+        const pageCount = Math.ceil(inputHeight / contentHeight);
+  
+        const addNextPage = (pageNumber) => {
+          if (pageNumber >= pageCount) {
+            resolve(pdf.output("dataurlstring"));
+            return;
+          }
+  
+          const nextPageHeight = Math.min(contentHeight, inputHeight - pageNumber * contentHeight);
+  
+          html2canvas(input, {
+            scrollY: -window.scrollY,
+            windowHeight: document.documentElement.scrollHeight,
+            width: inputWidth,
+            height: inputHeight,
+            x: 0,
+            y: pageNumber * contentHeight,
+          }).then((nextCanvas) => {
+            const nextImageData = nextCanvas.toDataURL("image/jpeg", 1.0);
+            pdf.addPage([contentWidth, nextPageHeight]);
+            pdf.addImage(nextImageData, "JPEG", 0, position, contentWidth, nextPageHeight);
+            position -= nextPageHeight;
+  
+            addNextPage(pageNumber + 1);
+          });
+        };
+  
+        addNextPage(1);
+      });
     });
   };
 
