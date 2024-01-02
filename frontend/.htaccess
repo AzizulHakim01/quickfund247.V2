@@ -1,9 +1,13 @@
-<IfModule mode_rewrite.c>
-    RewriteEngine on
+<IfModule mod_rewrite.c>
+    RewriteEngine On
     RewriteBase /
     RewriteRule ^index\.html$ - [L]
+    RewriteRule ^static/(.*)$ static/$1 [L]
+    RewriteRule ^media/(.*)$ media/$1 [L]
+    RewriteRule ^manifest\.json$ manifest.json [L]
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-l
-    RewriteRule . /index.html
-</IfModule>
+    RewriteRule . /index.html [L]
+  </IfModule>
+  
+  

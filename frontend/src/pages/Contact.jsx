@@ -286,7 +286,7 @@ const Contact = () => {
                   onChange={(e) => setCity(e.target.value)}
                 />
               </div>
-              <div>
+              <div className="col-span-3 md:col-span-1">
                 <label
                   htmlFor="small-input"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -304,7 +304,7 @@ const Contact = () => {
                 />
               </div>
 
-              <div>
+              <div className="col-span-3 md:col-span-1">
                 <label
                   htmlFor="small-input"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"

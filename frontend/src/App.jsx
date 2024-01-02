@@ -17,7 +17,7 @@ function App() {
   
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/">
       <Routes>
           <Route path="/" element={<Homepage/>}/>
           <Route path="*" element={<Error/>}/>
@@ -29,7 +29,7 @@ function App() {
           <Route path="/working-capital" element={<WorkingCap/>}/>
           <Route path="/faq" element={<Faq/>}/>
           <Route path="/privacy" element={<PrivacyPolicy/>}/>
-          <Route path="/contact" element={<Contact/>}/>
+          <Route path="/apply" element={<Contact/>}/>
           <Route path="/thank" element={<Thanks/>}/>
           <Route path="/view" element={<ViewForm/>}/>
       </Routes>

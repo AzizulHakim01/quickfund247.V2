@@ -60,9 +60,9 @@ const Header = () => {
                   </Link>
                   <br />
                   <Link
-                    to={"/contact"}
+                    to={"/apply"}
                     className={`hover:text-[#00D1A9] ${
-                      location.pathname == "/contact"
+                      location.pathname == "/apply"
                         ? "text-[#00D1A9] font-bold"
                         : ""
                     }`}
@@ -85,7 +85,7 @@ const Header = () => {
               </li>
             </ul>
             <Link
-              to={"/contact"}
+              to={"/apply"}
               className="hover:text-[#ffffff] bg-blue-950 text-[#00D1A9] rounded-full px-4 py-2 font-bold"
             >
               Apply Now
@@ -93,7 +93,7 @@ const Header = () => {
           </nav>
         </div>
         <Link
-          to={"/contact"}
+          to={"/apply"}
           className="hover:text-[#ffffff] md:hidden bg-blue-950 text-[#00D1A9] rounded-full px-4 py-2 font-bold"
         >
           Apply Now
@@ -193,7 +193,7 @@ const Header = () => {
                 </li>
                 <li>
                   <Link
-                    to={"/contact"}
+                    to={"/apply"}
                     className="uppercase hover:text-[#00D1A9] text-blue-950"
                   >
                     Contact Us

@@ -54,33 +54,25 @@ const ViewForm = () => {
 
   // Assuming 'generatePdf' function and 'files' array are defined elsewhere
   // Function to generate PDF and return as Base64 Data URL
-  const generatePdf = () => {
-    return new Promise((resolve, reject) => {
+  const generatePdf = async () => {
+    try {
       const input = document.getElementById("print-content");
+      if (!input) throw new Error("Element with id 'print-content' not found");
 
-      if (input) {
-        html2canvas(input).then((canvas) => {
-          const imgData = canvas.toDataURL("image/png");
-          const pdf = new jsPDF({
-            unit: "mm",
-            format: "a4",
-          });
+      const pdf = require("html-pdf");
+      const pdfOptions = { format: "A4" }; // You can adjust the format as needed
 
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight();
-          const ratio = canvas.width / canvas.height;
-          const imgWidth = pdfWidth;
-          const imgHeight = pdfWidth / ratio;
-
-          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-
-          const pdfDataUrl = pdf.output("dataurlstring");
-          resolve(pdfDataUrl);
+      // Generate the PDF from HTML content
+      return new Promise((resolve, reject) => {
+        pdf.create(input.outerHTML, pdfOptions).toBuffer((err, buffer) => {
+          if (err) reject(err);
+          else resolve(buffer);
         });
-      } else {
-        reject(new Error("Element with id 'print-content' not found"));
-      }
-    });
+      });
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      throw new Error("Failed to generate PDF");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -122,7 +114,7 @@ const ViewForm = () => {
         })
       );
       const response = await axios.post(
-        "http://localhost:3000/send-email",
+        "https://quickfunds-247.onrender.com/send-email",
         formDataToSend,
         {
           headers: {
@@ -149,7 +141,7 @@ const ViewForm = () => {
   // ... (remaining code)
 
   const handleEdit = () => {
-    navigate("/contact");
+    navigate("/apply");
   };
   return (
     <Layout>
