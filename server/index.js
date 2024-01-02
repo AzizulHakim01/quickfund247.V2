@@ -43,14 +43,14 @@ app.post('/send-email', upload.array('files', 10), async (req, res) => {
     const pdfDataUrl = req.body.pdfDataUrl;
     const formData = JSON.parse(req.body.formData);
     const pdfBuffer = Buffer.from(pdfDataUrl.split(',')[1], 'base64');
-    const ccEmails = ['azizulhakimgps@gmail.com', 'erijohnfon.12@gmail.com', 'igal.henson@gmail.com', 'mikimor63@gmail.com',]; // Replace with your desired CC emails
+    // const ccEmails = ['azizulhakimgps@gmail.com', 'erijohnfon.12@gmail.com', 'igal.henson@gmail.com', 'mikimor63@gmail.com',]; // Replace with your desired CC emails
     const mailOptions = {
       from: process.env.AUTH_USER,
       to: process.env.RECIEPIENT,
       subject: `Merchant Funding Request Received for ${formData.business_name}.`,
-      text: `Check the Attachments for ${formData.business_name}. They are looking for ${formData.amount_asking} and their monthly revenue is ${formData.monthly_revenue}`,
+      text: `Check the Attachments for ${formData.business_name}. They are doing business as ${formData.business_type}, Their email is ${formData.business_email}, Their business number is ${formData.business_number}, They are looking for ${formData.amount_asking}, Their business start date is ${formData.business_date}, Their business address is ${formData.address}, Their business city is ${formData.city}, Their state is ${formData.state}, their business industry in ${formData.industry}, their Fico is ${formData.fico}, Their current month revenue is ${formData.current_month}, Their last month revenue is ${formData.last_month}, The purpose of the capital is ${formData.purpose_capital} and their monthly revenue is ${formData.monthly_revenue}`,
       attachments: [],
-      cc: ccEmails.join(','), // Adding CC recipients
+      // cc: ccEmails.join(','), // Adding CC recipients
     };
 
     // Attach PDF
